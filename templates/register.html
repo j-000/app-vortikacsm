@@ -1,12 +1,30 @@
 {# register.html #}
 {% extends 'index.html' %}
-{% block body %}
 
-<body class="bg-gradient-primary">
-  
+{% block pagestyles %}
+<style>
+  body {
+    display: flex;
+    align-items: center;
+  }
+  .bg-register-image {
+    background: url(https://source.unsplash.com/Mv9hjnEUHR4/600x800);
+    background-position: center;
+    background-size: cover
+  }
+  .user {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<body>
   <div class="container">
     <div id="alert"></div>
-    <div class="card o-hidden border-0 shadow-lg my-5">
+    <div class="card border-0 shadow-lg my-5">
       <div class="card-body p-0">
         <!-- Nested Row within Card Body -->
         <div class="row">
@@ -19,12 +37,10 @@
               <form class="user" id="registerForm">
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="FirstName"
-                      placeholder="First Name">
+                    <input type="text" class="form-control form-control-user" id="FirstName" placeholder="First Name">
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" class="form-control form-control-user" id="LastName"
-                      placeholder="Last Name">
+                    <input type="text" class="form-control form-control-user" id="LastName" placeholder="Last Name">
                   </div>
                 </div>
                 <div class="form-group">
@@ -73,18 +89,18 @@
         },
         body: JSON.stringify({ name, surname, email, password })
       })
-      .then( data => data.json())
-      .then(res => {
-        if(res.error){
-          document.querySelector('div#alert').innerHTML = `
+        .then(data => data.json())
+        .then(res => {
+          if (res.error) {
+            document.querySelector('div#alert').innerHTML = `
           <div class="alert alert-warning mt-5" role="alert">${res.error}</div>`;
-        } else {
-          window.location = '/login';
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
+          } else {
+            window.location = '/login';
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
       console.log('Form submitted')
     })
 
