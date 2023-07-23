@@ -6,6 +6,7 @@ const { AuthRequired } = require('../middlewares/authentication');
 const { CheckPermissions, PERMISSIONS } = require('../middlewares/permissions');
 const { AuthenticationController } = require('../controllers/authentication');
 const { DashboardController } = require('../controllers/dashboard');
+const { ImportsController } = require('../controllers/imports');
 
 
 /* /api/register */
@@ -13,7 +14,7 @@ apiRoutes.route('/register')
   .post(UsersController.register)
 
 
-// // /api/login
+// /api/login
 apiRoutes.route('/login')
   .post(AuthenticationController.login);
 
@@ -50,6 +51,11 @@ apiRoutes.route('/users/:userid')
 // /api/dashboard-info
 apiRoutes.route('/dashboard-info')
   .get(AuthRequired, DashboardController.info)
+
+
+/* /api/feeds/:feedid/run-import */
+apiRoutes.route('/feeds/:feedid/run-import')
+  .post(AuthRequired, ImportsController.runImport)
 
 
 module.exports = {
