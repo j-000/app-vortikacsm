@@ -5,6 +5,7 @@ const { UsersController } = require('../controllers/users');
 const { AuthRequired } = require('../middlewares/authentication');
 const { CheckPermissions, PERMISSIONS } = require('../middlewares/permissions');
 const { AuthenticationController } = require('../controllers/authentication');
+const { DashboardController } = require('../controllers/dashboard');
 
 
 /* /api/register */
@@ -44,8 +45,13 @@ apiRoutes.route('/users')
 apiRoutes.route('/users/:userid')
   .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEWUSER), UsersController.getById)
   .delete(AuthRequired, CheckPermissions(PERMISSIONS.DELETEUSER), UsersController.delete)
-  
-  
+
+
+// /api/dashboard-info
+apiRoutes.route('/dashboard-info')
+  .get(AuthRequired, DashboardController.info)
+
+
 module.exports = {
   apiRoutes
 }
