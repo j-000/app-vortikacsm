@@ -1,7 +1,112 @@
 {# feeds.html #}
 {% extends 'index.html' %}
-{% block content %}
-<h5>Feeds!condassssds</h5>
-<show-toast></show-toast>
 
+{% block content %}
+<div class="row mb-4">
+  <div class="col d-flex justify-content-between">
+    <h1 class="h3 text-gray-800">Feeds</h1>
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newFeedModal">Add Feed</button>
+  </div>
+</div>
+<div class="row">
+  <div class="col" id="feeds">
+  </div>
+</div>
+
+
+<div class="modal fade" id="newFeedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Feed</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="feed">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">Name</span>
+              </div>
+              <input type="text" class="form-control" id="name" aria-describedby="basic-addon3">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">URL</span>
+              </div>
+              <input type="text" class="form-control" id="url" aria-describedby="basic-addon3">
+            </div>
+          </div>
+          <div class="form-group row mb-0">
+            <div class="col-sm-6 mb-sm-0">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="type">Type</label>
+                </div>
+                <select class="custom-select" id="type">
+                  <option selected>Choose...</option>
+                  <option value="sftp">SFTP</option>
+                  <option value="api">API</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" type="button" onclick="addNewFeed()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block pageLevelScripts %}
+<script>
+  
+  getAllFeeds();
+
+  function getAllFeeds(){
+    fetch('/api/feeds', {
+      method: 'get',
+      headers: {
+        authorization: `Bearer ${sessionStorage.getItem('token')}`
+      }
+    })
+    .then(data => data.json())
+    .then(json => {
+      let html = '';      
+      json.feeds.forEach(feed => { html += `<feed-card feed="${feed._id}"></feed-card>`});
+      document.querySelector('#feeds').innerHTML = html;
+    })
+    .catch(error => console.log(error))
+  }
+
+  function addNewFeed(){
+    fetch('/api/feeds', {
+    method: 'post',
+    headers: {
+      authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: document.querySelector('#name').value,
+      url: document.querySelector('#url').value,
+      type: document.querySelector('#type').value
+    })
+    })
+    .then(data => data.json())
+    .then(json => {
+      if (json.success) {
+        document.querySelector('.btn-close').click();
+        getAllFeeds();
+      }
+    })
+    .catch(error => console.log(error))
+  }
+</script>
 {% endblock %}
