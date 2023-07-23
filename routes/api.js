@@ -1,43 +1,30 @@
 const express = require('express');
 const apiRoutes = express.Router()
-const { FeedsController } = require('../controllers/feeds');
+const { FeedsController, AuthorizeOrIsOwner } = require('../controllers/feeds');
 const { UsersController } = require('../controllers/users');
-const { jwtrequired } = require('../middlewares/authentication');
-
-
-/*
-
-Users Collection
-
-*/
-apiRoutes.get('/users', jwtrequired, UsersController.getUsers);
-
-
-/*
-
-Register, Login and Logout
-
-*/
-
-apiRoutes.post('/register', UsersController.createUser);
-apiRoutes.post('/login', UsersController.loginUser);
-apiRoutes.get('/logout', UsersController.logoutUser);
+const { AuthRequired } = require('../middlewares/authentication');
+const { RolesController } = require('../controllers/roles');
+const { CheckPermissions, PERMISSIONS } = require('../middlewares/permissions');
+const { AuthenticationController } = require('../controllers/authentication');
 
 
 
 
-// Get all feeds records
-apiRoutes.get('/feeds/:userid', jwtrequired, FeedsController.getFeeds);
 
-// Add one feed
-// apiRoutes.post('/feeds') 
 
-// Edit one feed
-// apiRoutes.put('/feeds') 
+/* /api/register */
+apiRoutes.route('/register')
+  .post(UsersController.create)
 
-// Delete one feed
-// apiRoutes.delete('/feeds')
 
+// // /api/login
+apiRoutes.route('/login')
+  .post(AuthenticationController.login);
+
+
+// /api/logout
+apiRoutes.route('/logout')
+  .get(AuthenticationController.logout);
 
 
 
