@@ -1,87 +1,103 @@
-const { MongoDB } = require('../services/mongo');
-const jwt = require('jsonwebtoken');
-const { SECRET_KEY } = require('../middlewares/authentication');
+const { MongoDB } = require('../database/mongo');
 const bcrypt = require('bcrypt');
+const { User } = require('../models/user');
+const { ObjectId } = require('mongodb');
 
 
 class UsersController {
-  static async getUsers(req, res){
-    try {
-      const db = await MongoDB.getdb();
-      const usersCollection = db.collection('users');
-      const users = await usersCollection.find().toArray();
 
-      res.status(200).json(users)
-      
-      MongoDB.closedb()
-    } catch (error) {
-      console.error(`Error: ${error}`);
-      res.status(500).json({ error });
-    }
-  } 
-  
-  static async createUser(req, res){
+  static async register(req, res){
     const { name, surname, email, password } = req.body;
     try {
       const db = await MongoDB.getdb();
       const usersCollection = db.collection('users');
 
+      // Check if email exists
       const exists = await usersCollection.findOne({email});
       if (exists) {
-        res.status(409).json({error: 'Already registered.'});
         MongoDB.closedb()
-        return
+        res.status(409).json({error: 'Already registered.'});
       }
+
+      // Create new user and save
       const salt = await bcrypt.genSalt(10);
       const hashPwd = await bcrypt.hash(password, salt);
-      const result = await usersCollection.insertOne({ name, surname, email, hashPwd });
+      const orgid = await usersCollection.countDocuments() + 1;
+      const newUser = new User(name, surname, email, hashPwd, orgid).toJSON();
+      const result = await usersCollection.insertOne(newUser);
+      res.status(201).json({success: true});
 
-      res.status(201).json(result);
     } catch (error) {
-      console.log(error);
-      res.status(500).json({error})
+      res.status(500).json({error});
     }
   }
 
-  static async logoutUser(req, res) {
-    res.clearCookie('token');
-    res.redirect('/login');
-  }
-
-  static async loginUser(req, res) {
-    const { email, password } = req.body;
+  static async addNewUser(req, res) {
+    const orgid = req.user.orgid;
+    const { name, surname, email, password } = req.body;
     try {
       const db = await MongoDB.getdb();
       const usersCollection = db.collection('users');
+
+      // Check if email exists
       const exists = await usersCollection.findOne({email});
       if (exists) {
-        // Check password hash against stored hash
-        const isValidPwd = await bcrypt.compare(password, exists.hashPwd);
-        if(isValidPwd){
-
-          const token = jwt.sign({userid: exists._id }, SECRET_KEY, {expiresIn: '24h'});
-          res.cookie('token', token, {httpOnly: true});
-          res.status(200).json({success: true});
-          MongoDB.closedb();
-          return
-
-        } else {
-          res.status(403).json({error: 'Invalid password.'})
-          return
-        }
-
-      } else {
-        res.status(404).json({error: 'User not registered.'});
         MongoDB.closedb()
-        return
+        res.status(409).json({error: 'Already registered.'});
       }
+
+      // Create new user and save
+      const salt = await bcrypt.genSalt(10);
+      const hashPwd = await bcrypt.hash(password, salt);
+      const newUser = new User(name, surname, email, hashPwd, orgid).toJSON();
+      const result = await usersCollection.insertOne(newUser);
+      res.status(201).json({success: true});
     } catch (error) {
-      console.log(error);
       res.status(500).json({error});
-      return
     }
   }
-  
+
+  static async update(req, res) {
+
+  }
+
+  static async getById(req, res) {
+    const orgid = req.user.orgid;
+    try {
+      const db = await MongoDB.getdb();
+      const usersCollection = db.collection('users');
+      const _id = new ObjectId(req.params.userid);
+      const user = await usersCollection.findOne({ orgid, _id });
+      res.status(200).json({ user });
+    } catch (error) {
+      res.status(500).json({error});
+    }
+  }
+
+  static async getAll(req, res) {
+    const orgid = req.user.orgid;
+    try {
+      const db = await MongoDB.getdb();
+      const usersCollection = db.collection('users');
+      const users = await usersCollection.find({ orgid }).toArray();
+      res.status(200).json({ users });
+    } catch (error) {
+      res.status(500).json({error});
+    }
+  }
+
+  static async delete(req, res) {
+    const orgid = req.user.orgid;
+    try {
+      const db = await MongoDB.getdb();
+      const usersCollection = db.collection('users');
+      const _id = new ObjectId(req.params.userid);
+      const user = await usersCollection.findOneAndDelete({ orgid, _id });
+      res.status(200).json({success: true});
+    } catch (error) {
+      res.status(500).json({error});
+    }
+  }
 }
 
 

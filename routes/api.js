@@ -1,6 +1,6 @@
 const express = require('express');
 const apiRoutes = express.Router()
-const { FeedsController, AuthorizeOrIsOwner } = require('../controllers/feeds');
+const { FeedsController } = require('../controllers/feeds');
 const { UsersController } = require('../controllers/users');
 const { AuthRequired } = require('../middlewares/authentication');
 const { CheckPermissions, PERMISSIONS } = require('../middlewares/permissions');
@@ -9,7 +9,7 @@ const { AuthenticationController } = require('../controllers/authentication');
 
 /* /api/register */
 apiRoutes.route('/register')
-  .post(UsersController.create)
+  .post(UsersController.register)
 
 
 // // /api/login
@@ -34,6 +34,16 @@ apiRoutes.route('/feeds/:feedid')
   .delete(AuthRequired, CheckPermissions(PERMISSIONS.DELETEFEED), FeedsController.delete)
 
 
+// /api/users
+apiRoutes.route('/users')
+  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEWUSER), UsersController.getAll)
+  .post(AuthRequired, CheckPermissions(PERMISSIONS.CREATEUSER), UsersController.addNewUser)
+
+// /api/users/:userid
+apiRoutes.route('/users/:userid')
+  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEWUSER), UsersController.getById)
+  .delete(AuthRequired, CheckPermissions(PERMISSIONS.DELETEUSER), UsersController.delete)
+  
 module.exports = {
   apiRoutes
 }
