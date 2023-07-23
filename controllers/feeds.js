@@ -7,16 +7,16 @@ class FeedsController {
 
   static async create(req, res){
     const orgid = req.user.orgid;
-    const { name, url, type} = req.body;
+    const { name, url, type, firstElementKey} = req.body;
 
     // Check data required is available
-    if (!name || !url || !type) {
+    if (!name || !url || !type || !firstElementKey) {
       res.status(400).json({ error: 'Missing data to create feed. '});
       return
     }
 
     // Create new feed and save
-    const newFeed = new Feed(name, url, type, orgid).toJSON();
+    const newFeed = new Feed(name, url, type, orgid, firstElementKey).toJSON();
 
     try {
       const db = await MongoDB.getdb();
