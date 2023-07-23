@@ -3,9 +3,6 @@ const { AuthRequired } = require('../middlewares/authentication');
 const pageRoutes = express.Router()
 
 
-// pageRoutes.route('/')
-
-
 pageRoutes.get('/login', (req, res) => {
     if (req.cookies.token) return res.redirect('/')
     res.render('login.html');
@@ -42,6 +39,11 @@ pageRoutes.get('/feeds', AuthRequired, (req, res) => {
 
 pageRoutes.get('/feeds/:feedid', AuthRequired, (req, res) => {
     res.render('feeds_details.html', {feedid: req.params.feedid});
+})
+
+
+pageRoutes.get('/users', AuthRequired, (req, res) => {
+    res.render('users.html');
 })
 
 

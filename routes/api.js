@@ -39,10 +39,12 @@ apiRoutes.route('/users')
   .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEWUSER), UsersController.getAll)
   .post(AuthRequired, CheckPermissions(PERMISSIONS.CREATEUSER), UsersController.addNewUser)
 
+
 // /api/users/:userid
 apiRoutes.route('/users/:userid')
   .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEWUSER), UsersController.getById)
   .delete(AuthRequired, CheckPermissions(PERMISSIONS.DELETEUSER), UsersController.delete)
+  
   
 module.exports = {
   apiRoutes
