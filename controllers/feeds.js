@@ -12,6 +12,7 @@ class FeedsController {
     // Check data required is available
     if (!name || !url || !type) {
       res.status(400).json({ error: 'Missing data to create feed. '});
+      return
     }
 
     // Create new feed and save
