@@ -14,7 +14,11 @@
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Feeds</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800" id="feedsCount"></div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800" id="feedsCount">
+              <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
           </div>
           <div class="col-auto">
             <i class="fas fa-rss fa-2x text-gray-300"></i>
@@ -29,7 +33,11 @@
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Users</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800" id="usersCount"></div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800" id="usersCount">
+              <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
           </div>
           <div class="col-auto">
             <i class="fas fa-user fa-2x text-gray-300"></i>
@@ -44,7 +52,11 @@
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Jobs</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800" id="jobsCount"></div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800" id="jobsCount">
+              <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
           </div>
           <div class="col-auto">
             <i class="fas fa-briefcase fa-2x text-gray-300"></i>
@@ -66,9 +78,9 @@
     })
     .then(data => data.json())
     .then(json => {
-      document.querySelector('#usersCount').textContent = json.totalUsers;
-      document.querySelector('#feedsCount').textContent = json.totalFeeds;
-      document.querySelector('#jobsCount').textContent = json.totalJobs;
+      document.querySelector('#usersCount').innerHTML = `<span>${json.totalUsers}</span>`;
+      document.querySelector('#feedsCount').innerHTML = `<span>${json.totalFeeds}</span>`;
+      document.querySelector('#jobsCount').innerHTML = `<span>${json.totalJobs}</span>`;
     })
     .catch(error => console.log(error));
   }
