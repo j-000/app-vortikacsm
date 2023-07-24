@@ -16,6 +16,12 @@ function AuthRequired(req, res, next) {
       if (authHeader.split(' ').length > 1) {
 
         const token = authHeader.split(' ')[1];
+
+        if (token.split('.').length < 3) {
+          res.json({error: 'Invalid token format.'});
+          return
+        }
+
         jwt.verify(token, SECRET_KEY, (err, decoded) => {
           if(err){
             res.json({error: 'Invalid token.'});
