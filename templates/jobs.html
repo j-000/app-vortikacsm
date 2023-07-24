@@ -1,0 +1,60 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h1><span id="totalJobs"></span> Jobs</h1>
+<div class="row" id="jobs-row">
+  <div class="col" id="filters">
+    <h4>Filters</h4>
+  </div>
+  <div class="col" id="jobs-list"></div>
+</div>
+
+{% endblock %}
+
+{% block pageLevelScripts %}
+<script>
+
+function reWriteJobObject(a){
+  let t = {};
+  for (const key in a) {
+    // Check if the property value is an array with a single element
+    if (Array.isArray(a[key]) && a[key].length === 1) {
+      // Replace the array with its single element
+      t[key] = a[key][0];
+    } else {
+      t[key] = a[key]
+    }
+  }
+  return t
+}
+
+function getJobs(page){
+  fetch(`/api/jobs?page=${page}`, {
+    headers: {
+      authorization: `Bearer ${sessionStorage.getItem('token')}`
+    }
+  })
+  .then(data => data.json())
+  .then(json => {
+    document.querySelector('#totalJobs').textContent = json.allJobs.length;
+    let html = '';
+    // Jobs will be at most 25   
+    json.allJobs.forEach(j => {
+      j = reWriteJobObject(j)
+      html += `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${j.title}</h5>
+            <small class="card-subtitle mb-2 text-muted">${j.feedid}</small>
+            <p class="card-text"></p>
+          </div>
+        </div>`
+    });
+    document.querySelector('#jobs-list').innerHTML = html;
+    console.log(json)
+  })
+}
+
+getJobs(1);
+</script>
+{% endblock %}
