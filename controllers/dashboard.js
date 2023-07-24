@@ -9,8 +9,7 @@ class DashboardController {
       const totalUsers = (await db.collection('users').find({ orgid }).toArray()).length;
       const feeds = await db.collection('feeds').find({ orgid }).toArray();
       const totalFeeds = feeds.length;
-      let totalJobs = 0;
-      feeds.forEach( feed => feed.jobs ? totalJobs += feed.jobs.length : '')
+      const totalJobs = (await db.collection('jobs').find({ orgid }).toArray()).length;
       res.status(200).json({totalFeeds, totalUsers, totalJobs});
     } catch (error) {
       res.status(500).json({ error });

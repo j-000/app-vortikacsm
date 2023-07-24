@@ -49,7 +49,8 @@ class FeedsController {
       const feedsCollection = db.collection('feeds');
       const _id = new ObjectId(req.params.feedid);
       const feed = await feedsCollection.findOne({ orgid, _id });
-      res.json({feed});
+      const totalFeedJobs = await (await db.collection('jobs').find({ feedid: _id }).toArray()).length
+      res.json({feed:{ ...feed, totalFeedJobs}});
       MongoDB.closedb();
     } catch (err) {
       res.json({ error: err });

@@ -32,7 +32,7 @@ class ImportsController {
             res.status(403).json({ error: 'Importer run less than 1h ago.'})
             return
           } else {
-            importJobs(feed)
+            importJobs(feed, orgid)
             res.status(200).json({ success: 'Import started.' });
           }
 
