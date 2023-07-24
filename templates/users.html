@@ -46,7 +46,7 @@
     .then(json => {
       let html = '';
       json.users.forEach(user => { html += `
-        <a href="/users/${user._id}" class="card border-left-primary shadow h-100" style="text-decoration: none;">
+        <a href="/users/${user._id}" class="card border-left-success shadow h-100" style="text-decoration: none;">
           <div class="card-body py-2">
             <div class="row no-gutters align-items-center">
               <div class="col mr-2">
@@ -63,6 +63,11 @@
               </div>
               <div class="col-auto">
                 <i class="fas fa-user fa-2x"></i>
+              </div>
+            </div>
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2 d-flex justify-content-around">
+                <span><i class="fas fa-clock"></i> Last login 1h ago</span> 
               </div>
             </div>
           </div>
