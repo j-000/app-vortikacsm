@@ -46,3 +46,27 @@ nav {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
 }
+
+#greenPulseDot {
+ display: inline-block;
+ width: 10px;
+ height: 10px;
+ border: 1px solid green;
+ animation: pulse 1s linear infinite alternate-reverse;
+ background-color: green;
+ border-radius: 50%;
+}
+
+@keyframes pulse {
+    0%{
+        opacity: 0.1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100%{
+        opacity: 1;
+    }
+}
