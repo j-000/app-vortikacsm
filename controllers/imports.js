@@ -37,7 +37,7 @@ class ImportsController {
           }
 
         } else {
-          importJobs(feed)
+          importJobs(feed, orgid)
           res.status(200).json({ success: 'Import started.' });
         }
       
