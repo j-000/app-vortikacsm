@@ -35,3 +35,14 @@ nav {
 .border-left-secondary {
     border-left: .25rem solid #858796 !important
 }
+
+#jobs-row {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+
+#jobs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}

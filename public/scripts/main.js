@@ -16,3 +16,30 @@ function httpGuard(url, options) {
   // Call the original fetch function, not the overridden one!
   return originalFetch(url, options);
 }
+
+
+// Run Importer 
+function runImporter(feedId){
+  fetch(`/api/feeds/${feedId}/run-import`, {
+    method: 'post',
+    headers: {
+      authorization: `Bearer ${sessionStorage.getItem('token')}`
+    }
+  })
+  .then(data => data.json())
+  .then(json => {
+    if(json.success){
+      showToast('<i class="fas fa-gears text-success"></i> Importer started.')
+    } else {
+      showToast(`<i class="fas fa-triangle-exclamation text-warning"></i> ${json.error}`)
+    }
+  })
+}
+
+
+// Toast function
+function showToast(message){
+  document.querySelector('#toastTime').textContent = moment(Date.now()).fromNow();
+  document.querySelector('.toast-body').innerHTML = message;
+  bootstrap.Toast.getOrCreateInstance(document.querySelector('#liveToast')).show();
+}
