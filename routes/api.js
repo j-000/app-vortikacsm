@@ -10,6 +10,7 @@ const { ImportsController } = require('../controllers/imports');
 const { JobsController } = require('../controllers/jobs');
 const { MongoDB } = require('../database/mongo');
 const { ObjectId } = require('mongodb');
+const { FieldMappingController } = require('../controllers/fieldmapping');
 
 
 /* /api/register */
@@ -66,30 +67,7 @@ apiRoutes.route('/jobs')
 
 
 apiRoutes.route('/feeds/:feedid/field-mapping')
-  .get(AuthRequired, async (req, res) => {
-    const orgid = req.user.orgid;
-    const feedid = new ObjectId(req.params.feedid);
-    try {
-      const db = await MongoDB.getdb();
-      const anyjob = await db.collection('jobs')
-        // exclude importer added keys (_id, orgid, feedid)
-        .find({ orgid, feedid }, {projection: {_id: 0, orgid: 0, feedid: 0}})
-        .limit(1)
-        .toArray();
-
-      if (anyjob.length > 0) {
-        // Don't send _id, feedid
-        const mappings = await db.collection('mappings').findOne({ feedid }, {projection: {_id: 0, feedid: 0}});
-        const sourceFields = Object.keys(anyjob[0]);
-        res.json({ mappings, sourceFields })
-      } else {
-        res.json({error: 'No jobs have yet been imported.'})
-      }
-
-    } catch (error) {
-      res.json(error);
-    }
-  })
+  .get(AuthRequired, FieldMappingController.getFieldsAndMappings)
 
 
 module.exports = {
