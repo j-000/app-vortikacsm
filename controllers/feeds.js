@@ -1,17 +1,24 @@
 const { MongoDB } = require('../database/mongo');
 const { ObjectId } = require('mongodb');
 const { Feed } = require('../models/feed');
+const { getMappingsTemplateObject } = require('../models/mappings');
 
 
 class FeedsController {
 
   static async create(req, res){
     const orgid = req.user.orgid;
+
+    if (!orgid) {
+      res.status(500).json({error: 'Internal server error. Missing orgid. Feed not created.'});
+      return
+    }
+
     const { name, url, type, firstElementKey} = req.body;
 
     // Check data required is available
     if (!name || !url || !type || !firstElementKey) {
-      res.status(400).json({ error: 'Missing data to create feed. '});
+      res.status(400).json({ error: 'Missing data to create feed.'});
       return
     }
 
@@ -20,8 +27,13 @@ class FeedsController {
 
     try {
       const db = await MongoDB.getdb();
+      // Add new feed
       const feedsCollection = db.collection('feeds');
       const result = await feedsCollection.insertOne(newFeed);
+      // Add new mappings template for newly created feed
+      const mappings = getMappingsTemplateObject()
+      // Insert mapping object tagged with new feed id.
+      const result2 = await db.collection('mappings').insertOne({feedid: result.insertedId, ...mappings})
       res.status(201).json({success: true});
       MongoDB.closedb();
     } catch (error) {
