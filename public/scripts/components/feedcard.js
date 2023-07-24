@@ -9,6 +9,11 @@ class FeedCard extends HTMLElement {
   }
 
   connectedCallback() {
+    this.shadowRoot.innerHTML = `
+    <style>@import "http://localhost:3001/styles/dependencies/bootstrap5.css";</style>
+      <div class="spinner-border text-secondary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>`;
     const feedid = this.getAttribute('feed');    
     fetch(`/api/feeds/${feedid}`, {
       headers: {
@@ -16,7 +21,7 @@ class FeedCard extends HTMLElement {
       }
     })
     .then(data => data.json())
-    .then( ({feed}) => {
+    .then(({feed}) => {
        this.shadowRoot.innerHTML = `
       <script src="http://localhost:3001/scripts/dependencies/moment.js"></script>
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -49,7 +54,7 @@ class FeedCard extends HTMLElement {
             </div>
             <div class="row no-gutters align-items-center">
               <div class="col mr-2 d-flex justify-content-around">
-                <span><i class="fas fa-briefcase"></i> ${feed.jobs ? feed.jobs.length : '0'} Jobs</span> 
+                <span><i class="fas fa-briefcase"></i> ${feed.totalFeedJobs} Jobs</span> 
                 <span class="text-success"><i class="fas fa-triangle-exclamation"></i> 0 Failures</span> 
                 <small class="text-muted"><i class="fas fa-file-import"></i> Last import ${moment(feed.lastImport).fromNow()}</small>
               </div>
