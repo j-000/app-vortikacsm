@@ -23,10 +23,26 @@ class ImportsController {
       const feed = await feedsCollection.findOne({ _id, orgid});
       if (feed) {
         MongoDB.closedb()
-        importJobs(feed)
-        res.status(200).json({ success: 'Import started.' });
+
+        // Check feed has not run in the last 1h
+        if (feed.lastImport){
+          const oneHourInMs = 3600000;
+          const differenceMs = Date.now() - feed.lastImport;
+          if (differenceMs < oneHourInMs) {
+            res.status(403).json({ error: 'Importer run less than 1h ago.'})
+            return
+          } else {
+            importJobs(feed)
+            res.status(200).json({ success: 'Import started.' });
+          }
+
+        } else {
+          importJobs(feed)
+          res.status(200).json({ success: 'Import started.' });
+        }
+      
       } else {
-        res.status(404).json({error: 'No feed found.'})
+        res.status(404).json({ error: 'No feed found.' })
       }
 
     } catch (error) {
