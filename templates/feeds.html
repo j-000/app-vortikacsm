@@ -5,10 +5,13 @@
 <div class="row mb-4">
   <div class="col d-flex justify-content-between">
     <h1 class="h3 text-gray-800">Feeds</h1>
-    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newFeedModal">Add Feed</button>
+    <div>
+      <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#runImporterModal">Run Importer</button>
+      <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newFeedModal"><i class="fas fa-plus"></i> <span class="ml-3">Add Feed</span></button>
+    </div>
   </div>
 </div>
-<div class="row">
+<div class="row mb-5">
   <div class="col" id="feeds">
   </div>
 </div>
@@ -20,7 +23,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">New Feed</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" id="newFeedCloseButton" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form class="feed">
@@ -41,7 +44,13 @@
             </div>
           </div>
           <div class="form-group row mb-0">
-            <div class="col-sm-6 mb-sm-0">
+            <div class="col d-flex justify-content-between">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">First Element Key</span>
+                </div>
+                <input type="text" class="form-control" id="firstElementKey" aria-describedby="basic-addon3">
+              </div>
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <label class="input-group-text" for="type">Type</label>
@@ -57,8 +66,27 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
         <button class="btn btn-primary" type="button" onclick="addNewFeed()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="runImporterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Run Importer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      ...
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" type="button" onclick="">Save</button>
       </div>
     </div>
   </div>
@@ -96,13 +124,14 @@
     body: JSON.stringify({
       name: document.querySelector('#name').value,
       url: document.querySelector('#url').value,
-      type: document.querySelector('#type').value
+      type: document.querySelector('#type').value,
+      firstElementKey: document.querySelector('#firstElementKey').value,
     })
     })
     .then(data => data.json())
     .then(json => {
       if (json.success) {
-        document.querySelector('.btn-close').click();
+        document.querySelector('#newFeedCloseButton').click();
         getAllFeeds();
       }
     })
