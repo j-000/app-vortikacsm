@@ -19,7 +19,7 @@ function findRootNode(key, obj){
 }
 
 
-function importJobs(feed){
+function importJobs(feed, orgid){
   if (feed.type == 'api') {
     fetch(feed.url)
     .then(data => data.text())
@@ -31,10 +31,16 @@ function importJobs(feed){
           const jobs = findRootNode(feed.firstElementKey, result);
           try {
             const db = await MongoDB.getdb();
-            const feedsCollection = db.collection('feeds');
             const _id = new ObjectId(feed._id);
             const lastImport = Date.now();
-            const f = await feedsCollection.findOneAndUpdate({ _id }, {$set : { jobs, lastImport }});
+            // for each job add orgid and feedkey
+            const updatedJobs = jobs.map((job) => ({ ...job, feedid: feed._id, orgid }))
+            // add jobs to jobscollection
+            const jobsCollection = db.collection('jobs');
+            const g = await jobsCollection.insertMany(updatedJobs);
+            // update feed lastImport
+            const feedsCollection = db.collection('feeds');
+            const f = await feedsCollection.findOneAndUpdate({ _id }, {$set : { lastImport }});
           } catch (error) {
             console.log('Error importing.');
           }

@@ -7,6 +7,7 @@ const { CheckPermissions, PERMISSIONS } = require('../middlewares/permissions');
 const { AuthenticationController } = require('../controllers/authentication');
 const { DashboardController } = require('../controllers/dashboard');
 const { ImportsController } = require('../controllers/imports');
+const { JobsController } = require('../controllers/jobs');
 
 
 /* /api/register */
@@ -56,6 +57,10 @@ apiRoutes.route('/dashboard-info')
 /* /api/feeds/:feedid/run-import */
 apiRoutes.route('/feeds/:feedid/run-import')
   .post(AuthRequired, ImportsController.runImport)
+
+
+apiRoutes.route('/jobs')
+  .get(AuthRequired, JobsController.getAll)
 
 
 module.exports = {

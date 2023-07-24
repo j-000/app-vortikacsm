@@ -47,6 +47,12 @@ pageRoutes.get('/users', AuthRequired, (req, res) => {
 })
 
 
+pageRoutes.get('/jobs', AuthRequired, (req, res) => {
+    console.log(req.user)
+    res.render('jobs.html');
+})
+
+
 module.exports = {
     pageRoutes
 }
