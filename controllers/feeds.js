@@ -34,7 +34,7 @@ class FeedsController {
     try {
       const db = await MongoDB.getdb();
       const feedsCollection = db.collection('feeds');
-      let feeds = await feedsCollection.find({ orgid }).toArray();
+      let feeds = await feedsCollection.find({ orgid }, {projection: {_id: 1, name: 1}}).toArray();
       res.status(200).json({feeds});
       MongoDB.closedb();
     } catch (err) {
