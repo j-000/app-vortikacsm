@@ -1,0 +1,103 @@
+{# feeds_details.html #}
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="mb-5" id="feedInfo"></div>
+{% endblock %}
+
+{% block pageLevelScripts %}
+<script>
+  fetch(`/api/feeds/{{ feedid }}`, {
+    headers: {
+      authorization: `Bearer ${sessionStorage.getItem('token')}`
+    }
+  })
+  .then(data => data.json())
+  .then(({ feed }) => { 
+    document.querySelector('#feedInfo').innerHTML = `
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-secondary btn-sm" onclick="runImporter('${feed._id}')">Run Importer</button>
+      </div>
+    </div>
+    <div class="card mt-3">
+      <div class="card-header">
+        <div class="col">
+          <div class="d-flex justify-content-between">
+            <h5 class="mb-1 card-title">${feed.name}</h5>
+            <small class="text-muted">${feed._id} | <span class="badge text-bg-info">orgid: ${feed.orgid}</span></small>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title"><span class="badge text-bg-light">${feed.type.toUpperCase()}</span><span class="ml=3">${feed.url}</span></h5>
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2 d-flex justify-content-around">
+            <span><i class="fas fa-briefcase"></i> ${feed.jobs ? feed.jobs.length : '0'} Jobs</span> 
+            <span class="text-success"><i class="fas fa-triangle-exclamation"></i> 0 Failures</span> 
+            <small class="text-muted"><i class="fas fa-file-import"></i><strong class="ms-1">Last import</strong> ${moment(feed.lastImport).fromNow()}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card mt-4">
+      <div class="card-header">
+        <div class="col">
+          <div class="d-flex justify-content-between">
+            <h5 class="mb-1 card-title">Job Fields</h5>
+          </div>
+        </div>
+      </div>
+      <div class="card-body" style="height: 10em; overflow-y: scroll;">
+        <ul>
+          ${ feed.jobs ? getKeysHtml(feed.jobs) : 'No jobs.'}  
+        </ul>
+      </div>
+    </div>
+    <div class="card mt-4">
+      <div class="card-header">
+        <div class="col">
+          <div class="d-flex justify-content-between">
+            <h5 class="mb-1 card-title">History</h5>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        
+      </div>
+    </div>
+    `;
+  })
+
+function runImporter(feedId){
+  fetch(`/api/feeds/${feedId}/run-import`, {
+    method: 'post',
+    headers: {
+      authorization: `Bearer ${sessionStorage.getItem('token')}`
+    }
+  })
+  .then(data => data.json())
+  .then(json => {
+    if(json.success){
+      showToast('<i class="fas fa-gears text-success"></i> Importer started.')
+    } else {
+      showToast(`<i class="fas fa-triangle-exclamation text-warning"></i> ${json.error}`)
+    }
+  })
+}
+function getKeysHtml(jobs){
+  let html = '';
+  Object.keys(jobs[0]).sort().forEach(k => {
+    html += `<li>${k}</li>`
+  })
+  return html
+}
+
+function showToast(message){
+  document.querySelector('#toastTime').textContent = moment(Date.now()).fromNow();
+  document.querySelector('.toast-body').innerHTML = message;
+  bootstrap.Toast.getOrCreateInstance(document.querySelector('#liveToast')).show();
+}
+
+</script>
+{% endblock %}
