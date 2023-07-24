@@ -22,7 +22,7 @@ class FeedCard extends HTMLElement {
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
       crossorigin="anonymous" referrerpolicy="no-referrer" />
-       <style>@import "styles/dependencies/bootstrap5.css"; 
+       <style>@import "http://localhost:3001/styles/dependencies/bootstrap5.css"; 
        a {
         text-decoration: none;
        }
@@ -41,7 +41,7 @@ class FeedCard extends HTMLElement {
             </div>
             <div class="row no-gutters align-items-center">
               <div class="col mr-2">
-                <p class="card-title">${feed.url}</p>
+                <p class="card-title"><span class="badge text-bg-light">${feed.type.toUpperCase()}</span><span class="ml-3 text-muted">${feed.url}</span></p>
               </div>
               <div class="col-auto">
                 <i class="fas fa-rss fa-2x text-success"></i>
