@@ -7,6 +7,13 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const { logrequests } = require('./middlewares/serverlogging');
 const nunjucks = require('nunjucks');
+const mongoose = require('mongoose');
+
+
+main().catch(err => console.log(err));
+async function main() {
+  await mongoose.connect('mongodb://127.0.0.1:27017/database1');
+}
 
 
 // View engine setup
