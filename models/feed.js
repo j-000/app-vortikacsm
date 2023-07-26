@@ -1,20 +1,39 @@
-class Feed {
-  constructor(name, url, type, orgid, firstElementKey, dataType){
-    this.name = name;
-    this.url = url;
-    this.type = type;
-    this.orgid = orgid;
-    this.firstElementKey = firstElementKey
-    this.dataType = dataType
+const { default: mongoose } = require("mongoose");
+
+
+const feedSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Feed name is required']
+  },
+  url: {
+    type: String,
+    required: [true, 'Feed URL is required']
+  },
+  type: {
+    type: String,
+    required: [true, 'Feed type is required']
+  },
+  orgid: {
+    type: Number,
+    required: [true, 'Feed orgid is required']
+  },
+  firstElementKey: {
+    type: String,
+    required: [true, 'First element key is required']
+  },
+  lastImport: {
+    type: Date,
+  },
+  dataType: {
+    type: String,
+    required: [true, 'Data type is required']
   }
+})
 
-  toJSON(){
-    return {...this };
-  }
 
-}
-
+const FeedModel = mongoose.model('feeds', feedSchema);
 
 module.exports = {
-  Feed
+  FeedModel
 }
