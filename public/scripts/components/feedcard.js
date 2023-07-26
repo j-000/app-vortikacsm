@@ -33,6 +33,24 @@ class FeedCard extends HTMLElement {
        }
        .border-left-primary {
         border-left: .25rem solid #4e73df!important}
+        .animate-pulse {
+          animation: pulse 1s linear infinite alternate-reverse;
+         }
+         
+         @keyframes pulse {
+             0%{
+                 opacity: 0.1;
+             }
+         
+             50% {
+                 opacity: 0.5;
+             }
+         
+             100%{
+                 opacity: 1;
+             }
+         }
+
        </style>
         <a href="/feeds/${feed._id}" class="card border-left-primary shadow mb-3">
           <div class="card-body py-2">
@@ -40,16 +58,22 @@ class FeedCard extends HTMLElement {
               <div class="col mr-2">
                 <div class="d-flex justify-content-between">
                   <h5 class="mb-1 card-title">${feed.name}</h5>
-                  <small class="text-muted">${feed._id} | <span class="badge text-bg-info">orgid: ${feed.orgid}</span></small>
+                  <small class="text-muted">
+                  <span class="badge text-bg-light">${feed._id}</span> |
+                  <span class="badge text-bg-light">orgid: ${feed.orgid}</span></small>
                 </div>
               </div>
             </div>
-            <div class="row no-gutters align-items-center">
+            <div class="row no-gutters align-items-center mt-2">
               <div class="col mr-2">
-                <p class="card-title"><span class="badge text-bg-light">${feed.type.toUpperCase()}</span><span class="ml-3 text-muted">${feed.url}</span></p>
+                <p class="card-title">
+                  <span class="badge text-bg-light">${feed.type.toUpperCase()}</span>
+                  <span class="badge text-bg-light">${feed.dataType.toUpperCase()}</span>
+                  <span class="ml-3 text-muted">${feed.url}</span>
+                </p>
               </div>
               <div class="col-auto">
-                <i class="fas fa-rss fa-2x text-success"></i>
+                <i class="fa-solid fa-rss fa-2x animate-pulse text-success"></i>
               </div>
             </div>
             <div class="row no-gutters align-items-center">
