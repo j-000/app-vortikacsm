@@ -48,10 +48,38 @@ pageRoutes.get('/users', AuthRequired, (req, res) => {
 
 
 pageRoutes.get('/jobs', AuthRequired, (req, res) => {
-    console.log(req.user)
     res.render('jobs.html');
 })
 
+
+pageRoutes.get('/cms/templates/edit/basic-details-page', AuthRequired, (req, res) => {
+    res.render('cms/basicdetailspage.html');
+})
+
+
+pageRoutes.get('/cms/templates/edit/advanced-details-page', AuthRequired, (req, res) => {
+    res.render('cms/advanceddetailspage.html');
+})
+
+
+pageRoutes.get('/cms/templates/edit/search-results-page', AuthRequired, (req, res) => {
+    res.render('cms/searchresultspage.html');
+})
+
+
+pageRoutes.get('/cms/publish/preview', AuthRequired, (req, res) => {
+    res.render('cms/publishpreview.html');
+})
+
+
+pageRoutes.get('/cms/publish/live', AuthRequired, (req, res) => {
+    res.render('cms/publishlive.html');
+})
+
+
+pageRoutes.get('/*', (req, res) => {
+    res.redirect('/login')
+})
 
 module.exports = {
     pageRoutes
