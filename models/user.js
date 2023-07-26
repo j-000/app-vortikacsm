@@ -1,23 +1,45 @@
-const { PERMISSIONS } = require("../middlewares/permissions");
-const { VIEWFEED, CREATEFEED } = PERMISSIONS;
+const { default: mongoose } = require("mongoose");
 
 
-class User {
-  constructor(name, surname, email, hashPwd, orgid){
-    this.name = name;
-    this.surname = surname;
-    this.email = email;
-    this.hashPwd = hashPwd;
-    this.orgid = orgid;
-    this.permissions = [VIEWFEED, CREATEFEED]
+const UserSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Name is required']
+  },
+  surname: {
+    type: String
+  },
+  email: {
+    type: String,
+    validate: {
+      validator: function (v) {
+        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+      },
+      message: 'Please enter a valid email'
+    },
+    required: [true, 'Email is required'],
+    unique: true, 
+  },
+  hashPwd: {
+    type: String,
+    required: [true, 'Password is required']
+  },
+  orgid: {
+    type: Number,
+    required: [true, 'Orgid is required']
+  },
+  permissions: {
+    type: [String]
+  },
+  lastLogin: {
+    type: Date,
   }
+},{timestamps: true});
 
-  toJSON(){
-    return { ...this };
-  }
-}
+
+const UserModel = mongoose.model('users', UserSchema)
 
 
 module.exports = {
-  User
+  UserModel
 }
