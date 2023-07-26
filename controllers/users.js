@@ -29,7 +29,7 @@ class UsersController {
     const orgid = req.user.orgid;
     try {
       const _id = new ObjectId(req.params.userid);
-      const user = UserService.getOne({ orgid, _id });
+      const user = UserService.getOne({ orgid, _id }, {hashPwd: 0});
       if (user){
         res.status(200).json({ user });
       } else {
@@ -43,7 +43,7 @@ class UsersController {
   static async getAll(req, res) {
     const orgid = req.user.orgid;
     try {
-      const users = await UserService.getMany({ orgid });
+      const users = await UserService.getMany({ orgid }, {hashPwd: 0});
       res.status(200).json({ users });
     } catch (error) {
       res.status(500).json({error: error.message});
@@ -82,7 +82,7 @@ class UsersController {
         const isValidPwd = await bcrypt.compare(password, user.hashPwd);
         if (isValidPwd) {
           // Create signed bscypt object with user data
-          const userData = { userid: _id, orgid: user.orgid, permissions: user.permissions}
+          const userData = { userid: user._id, orgid: user.orgid, permissions: user.permissions}
           const token = jwt.sign(userData, SECRET_KEY, { expiresIn: '24h' });
           // Set last login
           UserService.update({_id: user._id}, {lastLogin: Date.now()})

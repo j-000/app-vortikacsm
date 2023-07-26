@@ -14,18 +14,18 @@ async function create(name, url, type, firstElementKey, dataType, orgid) {
   }
 }
 
-async function getOne(obj) {
+async function getOne(obj, proj) {
   try {
-    const result = await FeedModel.findOne(obj).exec();
+    const result = await FeedModel.findOne(obj, proj).exec();
     return result
   } catch (error) {
     throw error
   }
 }
 
-async function getMany(obj) {
+async function getMany(obj, proj) {
   try {
-    const result = await FeedModel.find(obj).exec();
+    const result = await FeedModel.find(obj, proj).exec();
     return result
   } catch (error) {
     throw error

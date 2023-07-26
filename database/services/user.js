@@ -23,18 +23,18 @@ async function create(name, surname, email, password) {
   }
 }
 
-async function getOne(obj) {
+async function getOne(obj, proj) {
   try {
-    const result = await UserModel.findOne(obj).exec();
+    const result = await UserModel.findOne(obj, proj).exec();
     return result
   } catch (error) {
     throw error
   }
 }
 
-async function getMany(obj) {
+async function getMany(obj, proj) {
   try {
-    const result = await UserModel.find(obj).exec();
+    const result = await UserModel.find(obj, proj).exec();
     return result
   } catch (error) {
     throw error

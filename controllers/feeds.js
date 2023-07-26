@@ -22,9 +22,11 @@ class FeedsController {
   static async getAll(req, res) {
     const orgid = req.user.orgid;
     try {
-      let feeds = await FeedService.getMany({ orgid }, {projection: {_id: 1, name: 1}});
+      let feeds = await FeedService.getMany({ orgid }, {_id: 1, name: 1});
+
       res.status(200).json({feeds});
     } catch (err) {
+      console.log(err);
       res.json({ error: 'Server error.' });
     }
   }
@@ -39,7 +41,7 @@ class FeedsController {
       // const totalFeedJobs = (await db.collection('jobs').find({ feedid: _id }).toArray()).length
       const totalFeedJobs = 0
 
-      res.json({feed:{ ...feed, totalFeedJobs}});
+      res.json({feed: {...feed.toJSON(), totalFeedJobs}});
     } catch (err) {
       res.json({ error: err });
     }
