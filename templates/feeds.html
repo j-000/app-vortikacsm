@@ -36,12 +36,24 @@
             </div>
           </div>
           <div class="form-group">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon3">URL</span>
+            <div class="col d-flex justify-content-between">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3">URL</span>
+                </div>
+                <input type="text" class="form-control" id="url" aria-describedby="basic-addon3">
               </div>
-              <input type="text" class="form-control" id="url" aria-describedby="basic-addon3">
-            </div>
+              <div class="input-group mb-3 ms-2">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="type">Feed Type</label>
+                </div>
+                <select class="form-control"id="type">
+                  <option selected>Choose...</option>
+                  <option value="sftp">SFTP</option>
+                  <option value="api">API</option>
+                </select>
+              </div>
+            </div>  
           </div>
           <div class="form-group row mb-0">
             <div class="col d-flex justify-content-between">
@@ -51,14 +63,14 @@
                 </div>
                 <input type="text" class="form-control" id="firstElementKey" aria-describedby="basic-addon3">
               </div>
-              <div class="input-group mb-3">
+              <div class="input-group mb-3 ms-2">
                 <div class="input-group-prepend">
-                  <label class="input-group-text" for="type">Type</label>
+                  <label class="input-group-text" for="datatype">Data Type</label>
                 </div>
-                <select class="custom-select" id="type">
+                <select class="form-control" id="datatype">
                   <option selected>Choose...</option>
-                  <option value="sftp">SFTP</option>
-                  <option value="api">API</option>
+                  <option value="xml">XML</option>
+                  <option value="json">JSON</option>
                 </select>
               </div>
             </div>
@@ -107,6 +119,10 @@
     })
     .then(data => data.json())
     .then(json => {
+      if(json.error) {
+        showToast(json.error);
+        return
+      }
       let html = '';      
       json.feeds.forEach(feed => { html += `<feed-card feed="${feed._id}"></feed-card>`});
       document.querySelector('#feeds').innerHTML = html;
@@ -126,6 +142,7 @@
       url: document.querySelector('#url').value,
       type: document.querySelector('#type').value,
       firstElementKey: document.querySelector('#firstElementKey').value,
+      dataType: document.querySelector('#datatype').value
     })
     })
     .then(data => data.json())
