@@ -80,6 +80,7 @@
         .then(json => {
           if (json.success) {
             sessionStorage.setItem('token', json.token);
+            sessionStorage.setItem('user', JSON.stringify(json.user));
             window.location = '/';
           } else {
             document.querySelector('div#alert').innerHTML = `
