@@ -4,13 +4,9 @@ const { FeedsController } = require('../controllers/feeds');
 const { UsersController } = require('../controllers/users');
 const { AuthRequired } = require('../middlewares/authentication');
 const { CheckPermissions, PERMISSIONS } = require('../middlewares/permissions');
-const { AuthenticationController } = require('../controllers/authentication');
 const { DashboardController } = require('../controllers/dashboard');
-const { ImportsController } = require('../controllers/imports');
 const { JobsController } = require('../controllers/jobs');
-const { MongoDB } = require('../database/mongo');
-const { ObjectId } = require('mongodb');
-const { FieldMappingController } = require('../controllers/fieldmapping');
+const { MappingController } = require('../controllers/mapping');
 
 
 /* /api/register */
@@ -20,36 +16,36 @@ apiRoutes.route('/register')
 
 // /api/login
 apiRoutes.route('/login')
-  .post(AuthenticationController.login);
+  .post(UsersController.login);
 
 
 // /api/logout
 apiRoutes.route('/logout')
-  .get(AuthenticationController.logout);
+  .get(UsersController.logout);
 
 
 // /api/feeds
 apiRoutes.route('/feeds')
-  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEWFEED), FeedsController.getAll)
-  .post(AuthRequired, CheckPermissions(PERMISSIONS.CREATEFEED), FeedsController.create)
+  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEW_FEED), FeedsController.getAll)
+  .post(AuthRequired, CheckPermissions(PERMISSIONS.CREATE_FEED), FeedsController.create)
 
 
 // /api/feeds/:feedid
 apiRoutes.route('/feeds/:feedid')
-  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEWFEED), FeedsController.getById)
-  .delete(AuthRequired, CheckPermissions(PERMISSIONS.DELETEFEED), FeedsController.delete)
+  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEW_FEED), FeedsController.getById)
+  .delete(AuthRequired, CheckPermissions(PERMISSIONS.DELETE_FEED), FeedsController.delete)
 
 
 // /api/users
 apiRoutes.route('/users')
-  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEWUSER), UsersController.getAll)
-  .post(AuthRequired, CheckPermissions(PERMISSIONS.CREATEUSER), UsersController.addNewUser)
+  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEW_USER), UsersController.getAll)
+  .post(AuthRequired, CheckPermissions(PERMISSIONS.CREATE_USER), UsersController.addNewUser)
 
 
 // /api/users/:userid
 apiRoutes.route('/users/:userid')
-  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEWUSER), UsersController.getById)
-  .delete(AuthRequired, CheckPermissions(PERMISSIONS.DELETEUSER), UsersController.delete)
+  .get(AuthRequired, CheckPermissions(PERMISSIONS.VIEW_USER), UsersController.getById)
+  .delete(AuthRequired, CheckPermissions(PERMISSIONS.DELETE_USER), UsersController.delete)
 
 
 // /api/dashboard-info
@@ -59,15 +55,19 @@ apiRoutes.route('/dashboard-info')
 
 /* /api/feeds/:feedid/run-import */
 apiRoutes.route('/feeds/:feedid/run-import')
-  .post(AuthRequired, ImportsController.runImport)
+  .post(AuthRequired, FeedsController.runImport)
 
 
 apiRoutes.route('/jobs')
   .get(AuthRequired, JobsController.getAll)
 
 
-apiRoutes.route('/feeds/:feedid/field-mapping')
-  .get(AuthRequired, FieldMappingController.getFieldsAndMappings)
+apiRoutes.route('/feeds/:feedid/mappings')
+  .get(AuthRequired, MappingController.getMappings)
+
+
+apiRoutes.route('/feeds/:feedid/source-fields')
+  .get(AuthRequired, JobsController.getSourceFields)
 
 
 module.exports = {
