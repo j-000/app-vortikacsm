@@ -20,7 +20,7 @@ function findRootNode(key, obj){
 
 
 function importJobs(feed, orgid){
-  if (feed.type == 'api') {
+  if (feed.type == 'api' && feed.dataType == 'xml') {
     fetch(feed.url)
     .then(data => data.text())
     .then(xml => {
