@@ -38,7 +38,7 @@ class AuthenticationController {
           // Set cookie token
           res.cookie('token', token, { httpOnly: true });
           
-          res.status(200).json({ success: true, token });
+          res.status(200).json({ success: true, token, user });
           MongoDB.closedb();
         } else {
           res.status(403).json({ error: 'Invalid password.' })
