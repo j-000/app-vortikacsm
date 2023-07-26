@@ -54,6 +54,8 @@ function AuthRequired(req, res, next) {
           // Set decoded user to request to use in view controller.
           // controllers will have access to user.token, user.orgid and user.permissions (set in contollers.authentication.js)  
           req.user = decoded;
+
+          // Allow access to route
           next();
         }
       })
