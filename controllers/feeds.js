@@ -1,6 +1,4 @@
-const { MongoDB } = require('../database/mongo');
 const { ObjectId } = require('mongodb');
-const { Feed } = require('../models/feed');
 const { getMappingsTemplateObject } = require('../models/mappings');
 const { importJobs } = require('../services/importer');
 const FeedService = require('../database/services/feeds');

@@ -2,7 +2,7 @@ const PERMISSIONS = {
 
   // User 
   VIEW_USER: 'view-user',
-  CREAT_EUSER: 'create-user',
+  CREATE_USER: 'create-user',
   UPDATE_USER: 'update-user',
   DELETE_USER: 'delete-user',
   
@@ -39,6 +39,8 @@ const PERMISSIONS = {
   ALLOW_PUBLISH_LIVE: 'view-publish-live',
 
   
+  // JOBS
+  
 
 }
 
@@ -50,8 +52,19 @@ function CheckPermissions(permission){
   }
 }
 
+const BASIC_PERIMISSIONS = [
+  PERMISSIONS.VIEW_FEED,
+  PERMISSIONS.UPDATE_FEED,
+  PERMISSIONS.CREATE_FEED,
+  PERMISSIONS.DELETE_FEED,
+
+  PERMISSIONS.VIEW_USER,
+  PERMISSIONS.UPDATE_USER
+
+]
 
 module.exports = {
   PERMISSIONS,
+  BASIC_PERIMISSIONS,
   CheckPermissions
 }

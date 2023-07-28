@@ -80,6 +80,7 @@ class UsersController {
       if (user) {
         // Check password hash against stored hash
         const isValidPwd = await bcrypt.compare(password, user.hashPwd);
+                  
         if (isValidPwd) {
           // Create signed bscypt object with user data
           const userData = { userid: user._id, orgid: user.orgid, permissions: user.permissions}
@@ -87,8 +88,13 @@ class UsersController {
           // Set last login
           UserService.update({_id: user._id}, {lastLogin: Date.now()})
           // Set cookie token
-          res.cookie('token', token, { httpOnly: true });          
-          res.status(200).json({ success: true, token, user });
+          res.cookie('token', token, { httpOnly: true });
+          
+          // Delete hashPwd from being sent to client
+          const u = user.toJSON()
+          delete u.hashPwd;
+
+          res.status(200).json({ success: true, token, user: u });
         } else {
           res.status(403).json({ error: 'Invalid password.' })
         }
@@ -96,6 +102,7 @@ class UsersController {
         res.status(404).json({ error: 'User not registered.' });
       }
     } catch (error) {
+      console.log(error);
       res.status(500).json({error: 'Server error.'});
     }
   }
