@@ -1,0 +1,75 @@
+@import './base.css';
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+body {
+    background: #f1f4f6;
+}
+
+nav {
+    background: #fafbfc !important;
+}
+
+.dropdown-menu .show {
+    right: 0 !important;
+    left: unset !important;
+}
+
+.dropdown-menu[data-bs-popper] {
+    right: 0 !important;
+    left: unset !important;
+}
+
+.border-left-primary {
+    border-left: .25rem solid #4e73df !important
+}
+
+.border-left-success {
+    border-left: .25rem solid #1cc88a !important
+}
+
+.border-left-warning {
+    border-left: .25rem solid #f6c23e !important
+}
+
+.border-left-dark {
+    border-left: .25rem solid #5a5c69 !important
+}
+
+.border-left-secondary {
+    border-left: .25rem solid #858796 !important
+}
+
+#jobs-row {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+
+#jobs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+#greenPulseDot {
+ display: inline-block;
+ width: 10px;
+ height: 10px;
+ border: 1px solid green;
+ animation: pulse 1s linear infinite alternate-reverse;
+ background-color: green;
+ border-radius: 50%;
+}
+
+@keyframes pulse {
+    0%{
+        opacity: 0.1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100%{
+        opacity: 1;
+    }
+}
