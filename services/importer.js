@@ -1,7 +1,7 @@
 const xml2js = require('xml2js');
-const { MongoDB } = require('../database/mongo');
+const JobsService = require('../database/services/jobs');
 const { ObjectId } = require('mongodb');
-
+const FeedsService = require('../database/services/feeds');
 
 function findRootNode(key, obj){
   for (const k in obj){
@@ -28,19 +28,23 @@ function importJobs(feed, orgid){
         if (err){
           console.log('Error importing', err);
         } else {
+          
+          // TODO: ensure this doesn't fail or raise an error
+          // TODO: xml2js seems to convert the data to arrays key: ['value']. Need to convert this back to string.
           const jobs = findRootNode(feed.firstElementKey, result);
+          
+          const feedId = new ObjectId(feed._id);
           try {
-            const db = await MongoDB.getdb();
-            const _id = new ObjectId(feed._id);
-            const lastImport = Date.now();
-            // for each job add orgid and feedkey
-            const updatedJobs = jobs.map((job) => ({ ...job, feedid: feed._id, orgid }))
+
             // add jobs to jobscollection
-            const jobsCollection = db.collection('jobs');
-            const g = await jobsCollection.insertMany(updatedJobs);
-            // update feed lastImport
-            const feedsCollection = db.collection('feeds');
-            const f = await feedsCollection.findOneAndUpdate({ _id }, {$set : { lastImport }});
+            for (const job of jobs) {
+              // TODO: validate all jobs contain same fields. (some jobs may be missing fields).
+              const newJob = await JobsService.create(feedId, orgid, job);
+            }
+
+            const lastImport = Date.now();
+            const feed = await FeedsService.update(feedId, { lastImport })
+            
           } catch (error) {
             console.log('Error importing.');
           }
