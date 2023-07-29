@@ -6,6 +6,7 @@ const { AuthRequired } = require('../middlewares/authentication');
 const { DashboardController } = require('../controllers/dashboard');
 const { JobsController } = require('../controllers/jobs');
 const { MappingController } = require('../controllers/mapping');
+const { TemplateController } = require('../controllers/template');
 
 
 
@@ -93,6 +94,20 @@ apiRoutes.route('/users/:userid')
   .get(AuthRequired, UsersController.getById)
   .delete(AuthRequired, UsersController.delete)
 
+
+
+/**
+ * 
+ * /api/cms/templates?type= ('all', 'bjdp', 'ajdp', 'srp') - Get templates; Add template
+ */
+
+apiRoutes.route('/cms/templates/list')
+  .get(AuthRequired, TemplateController.getTemplate)
+  .post(AuthRequired, TemplateController.createTemplate)
+
+  
+apiRoutes.route('/cms/templates/:templateid')
+  .get(AuthRequired, TemplateController.getTemplateHTML)
 
   
 module.exports = {
