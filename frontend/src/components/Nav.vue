@@ -37,7 +37,6 @@ const store = globalStore();
                               <i class="fa-regular fa-file-lines me-2"></i>
                               <span>Basic Details Page</span>
                             </div>
-                            <span class="ms-2">(1)</span>
                           </RouterLink>
                         </li>
                         <li>
@@ -46,7 +45,6 @@ const store = globalStore();
                               <i class="fa-regular fa-file-lines me-2"></i>
                               <span>Advanced Details Page</span>
                             </div>
-                            <span class="ms-2">(1)</span>
                           </RouterLink>
                         </li>
                         <li>
@@ -55,18 +53,39 @@ const store = globalStore();
                               <i class="fa-regular fa-file-lines me-2"></i>
                               <span>Search Results Page</span>
                             </div>
-                            <span class="ms-2">(1)</span>
                           </RouterLink>
                         </li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><h6 class="dropdown-header">Publish</h6></li>
+                        <li><h6 class="dropdown-header">View Sites</h6></li>
                         <li>
                           <RouterLink class="dropdown-item d-flex justify-content-between" :to="{name: 'cms-publish-preview'}">
                             <div>
                               <i class="fas fa-flask me-2"></i>
                               <span>Preview</span>
                             </div>
-                            <span class="ms-2">(2)</span>
+                          </RouterLink>
+                        </li>
+                        <li>
+                          <RouterLink class="dropdown-item d-flex justify-content-between" :to="{name: 'cms-publish-live'}">
+                            <div>
+                              <i class="fas fa-globe me-2"></i>
+                              <span>Live</span>
+                            </div>
+                            <div>
+                            </div>
+                          </RouterLink>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><h6 class="dropdown-header">Publish Templates</h6></li>
+                        <li>
+                          <RouterLink class="dropdown-item d-flex justify-content-between" :to="{name: 'cms-publish-preview'}">
+                            <div>
+                              <i class="fas fa-flask me-2"></i>
+                              <span>Preview</span>
+                            </div>
+                            <div>
+                              <span id="orangeDot"></span>
+                            </div>
                           </RouterLink>
                         </li>
                         <li>
@@ -77,7 +96,6 @@ const store = globalStore();
                             </div>
                             <div>
                               <span id="greenPulseDot"></span>
-                              <span class="ms-2">(2)</span>
                             </div>
                           </RouterLink>
                         </li>
