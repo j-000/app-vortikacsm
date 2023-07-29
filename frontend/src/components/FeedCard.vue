@@ -26,9 +26,9 @@
       </div>
       <div class="row no-gutters align-items-center">
         <div class="col mr-2 d-flex justify-content-around">
-          <span><i class="fas fa-briefcase"></i> {{feedData.totalfeedJobs}} Jobs</span> 
+          <span><i class="fas fa-briefcase"></i> {{feedData.totalFeedJobs}} Jobs</span> 
           <span class="text-success"><i class="fas fa-triangle-exclamation"></i> 0 Failures</span> 
-          <small class="text-muted"><i class="fas fa-file-import"></i> Last import {{feedData.lastImport}}</small>
+          <small class="text-muted"><i class="fas fa-file-import"></i> Last import {{$moment(feedData.lastImport).fromNow()}}</small>
         </div>
       </div>
     </div>
@@ -44,6 +44,7 @@
 import { ref } from 'vue';
 import global from '../stores/global';
 import { RouterLink } from 'vue-router';
+
 
 export default {
     props: {
