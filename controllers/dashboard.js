@@ -1,15 +1,18 @@
-const { MongoDB } = require('../database/mongo');
-
+const JobsService = require('../database/services/jobs');
+const UserService = require('../database/services/user');
+const FeedService = require('../database/services/feeds');
 
 class DashboardController {
   static async info(req, res) {
+    // Get logged user orgid from token
     const orgid = req.user.orgid;
     try {
-      const db = await MongoDB.getdb();
-      const totalUsers = (await db.collection('users').find({ orgid }).toArray()).length;
-      const feeds = await db.collection('feeds').find({ orgid }).toArray();
-      const totalFeeds = feeds.length;
-      const totalJobs = (await db.collection('jobs').find({ orgid }).toArray()).length;
+      // Get all users for this orgid
+      const totalUsers = (await UserService.getMany({ orgid })).length;
+      // Get all feeds for this orgid
+      const totalFeeds = (await FeedService.getMany({ orgid })).length;
+      // Get all jobs for this orgid
+      const totalJobs = (await JobsService.getMany({ orgid })).length;
       res.status(200).json({totalFeeds, totalUsers, totalJobs});
     } catch (error) {
       res.status(500).json({ error });
