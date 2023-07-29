@@ -4,3 +4,4 @@ node_modules/
 _* 
 .vscode
 *.http
+templates 
