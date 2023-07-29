@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div id="alert"></div>
+    <div></div>
     <div class="card border-0 shadow-lg my-5">
       <div class="card-body p-0">
         <div class="row">
@@ -10,37 +10,67 @@
               <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
               </div>
-              <form class="user" id="registerForm">
+              <form class="user">
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="FirstName" placeholder="First Name">
+                    <input
+                      v-model="userData.name"
+                      type="text"
+                      class="form-control form-control-user"
+                      placeholder="First Name"
+                    />
                   </div>
                   <div class="col-sm-6">
-                    <input type="text" class="form-control form-control-user" id="LastName" placeholder="Last Name">
+                    <input
+                      v-model="userData.surname"
+                      type="text"
+                      class="form-control form-control-user"
+                      placeholder="Last Name"
+                    />
                   </div>
                 </div>
                 <div class="form-group">
-                  <input type="email" class="form-control form-control-user" id="InputEmail"
-                    placeholder="Email Address">
+                  <input
+                    v-model="userData.email"
+                    type="email"
+                    autocomplete="username"
+                    class="form-control form-control-user"
+                    placeholder="Email Address"
+                  />
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="InputPassword"
-                      placeholder="Password">
+                    <input
+                      v-model="userData.password"
+                      type="password"
+                      autocomplete="new-password"
+                      class="form-control form-control-user"
+                      placeholder="Password"
+                    />
                   </div>
                   <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="RepeatPassword"
-                      placeholder="Repeat Password">
+                    <input
+                      type="password"
+                      autocomplete="new-password"
+                      class="form-control form-control-user"
+                      placeholder="Repeat Password"
+                    />
                   </div>
                 </div>
-                <input type="submit" class="btn btn-primary btn-user btn-block" value="Register Account">
+                <a @click="register" class="btn btn-primary btn-user btn-block"
+                  >Register Account</a
+                >
               </form>
-              <hr>
+              <hr />
               <div class="text-center">
-                <RouterLink class="small" :to="{ name: 'forgot-password' }">Forgot Password?</RouterLink>
+                <RouterLink class="small" :to="{ name: 'forgot-password' }"
+                  >Forgot Password?</RouterLink
+                >
               </div>
               <div class="text-center">
-                <RouterLink class="small" :to="{ name: 'login' }">Already have an account? Login!</RouterLink>
+                <RouterLink class="small" :to="{ name: 'login' }"
+                  >Already have an account? Login!</RouterLink
+                >
               </div>
             </div>
           </div>
@@ -51,23 +81,57 @@
 </template>
 
 <script>
-export default {
+import { ref } from "vue";
+import global from '../stores/global';
+import toast from '../functions';
+import router from "../router";
 
+export default {
+  setup() {
+    const store = global();
+    const userData = ref({
+      name: "",
+      surname: "",
+      email: "",
+      password: "",
+    });
+
+    const register = async () => {
+      console.log(userData.value);
+      const response = await fetch(`http://localhost:3001/api/register`, { 
+        method: 'post', 
+        body: JSON.stringify(userData.value),
+        headers: { authorization: `Bearer ${store.user.token}`, 'Content-Type': 'application/json'} });
+
+      const json = await response.json();
+      if(json.success) {
+        toast('Success! Redirecting you to login...');
+        setTimeout(() => { router.push('/login') }, 1500);
+      } else {
+        toast(json.error);
+      }
+    }
+
+    return {
+      userData,
+      register
+    };
+  },
 };
 </script>
 
 <style>
 body {
-    align-items: center;
-  }
-  .bg-register-image {
-    background: url(https://source.unsplash.com/Mv9hjnEUHR4/600x800);
-    background-position: center;
-    background-size: cover
-  }
-  .user {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-  }
+  align-items: center;
+}
+.bg-register-image {
+  background: url("../assets/dog1.jpg");
+  background-position: center;
+  background-size: cover;
+}
+.user {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
 </style>
