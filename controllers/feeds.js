@@ -1,8 +1,8 @@
 const { ObjectId } = require('mongodb');
-const { getMappingsTemplateObject } = require('../models/mappings');
 const { importJobs } = require('../services/importer');
+const JobsService = require('../database/services/jobs');
 const FeedService = require('../database/services/feeds');
-
+const MappingsService = require('../database/services/mappings');
 
 class FeedsController {
 
@@ -10,7 +10,9 @@ class FeedsController {
     const orgid = req.user.orgid;
     const { name, url, type, firstElementKey, dataType} = req.body;
     try {      
-      const result = await FeedService.create(name, url, type, firstElementKey, dataType, orgid);
+      const newFeed = await FeedService.create(name, url, type, firstElementKey, dataType, orgid);
+      const feedid = new ObjectId(newFeed._id);
+      const newMappings = await MappingsService.create(feedid, orgid);
       res.status(201).json({success: true});
     } catch (error) {
       res.status(500).json({error: 'Server error.'});
@@ -33,11 +35,9 @@ class FeedsController {
     const orgid = req.user.orgid;
     try {
       const _id = new ObjectId(req.params.feedid);
-      const feed = await FeedService.getOne({ orgid, _id });
+      const feed = await FeedService.getOne({ orgid, _id }, {__v: 0});
       
-      // TODO: implement jobs model and service 
-      // const totalFeedJobs = (await db.collection('jobs').find({ feedid: _id }).toArray()).length
-      const totalFeedJobs = 0
+      const totalFeedJobs = (await JobsService.getMany({ feedid: _id })).length;
 
       res.json({feed: {...feed.toJSON(), totalFeedJobs}});
     } catch (err) {
@@ -71,6 +71,7 @@ class FeedsController {
       return
     }
 
+    let startRun = false;
     try {
       // Check if feed exists
       const feed = await FeedService.getOne({ _id, orgid});
@@ -83,15 +84,20 @@ class FeedsController {
             res.status(403).json({ error: 'Importer run less than 1h ago.'})
             return
           } else {
-            importJobs(feed, orgid)
+            startRun = true;
             res.status(200).json({ success: 'Import started.' });
           }
 
         } else {
-          importJobs(feed, orgid)
+          startRun = true;
           res.status(200).json({ success: 'Import started.' });
         }
-      
+
+        // Start Importer
+        if (startRun) {
+          importJobs(feed, orgid)
+        };
+
       } else {
         res.status(404).json({ error: 'No feed found.' })
       }
