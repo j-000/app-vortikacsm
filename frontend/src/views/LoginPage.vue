@@ -1,17 +1,5 @@
 <template>
   <div class="container indigo-200">
-    <!-- toast -->
-    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3 mt-3">
-      <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <i class="fas fa-tornado"></i>
-          <strong class="me-auto ml-2">Vortika<sup>CSM</sup></strong>
-          <small id="toastTime"></small>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body"></div>
-      </div>
-    </div>
     <div class="row justify-content-center">
       <div class="col-xl-10 col-lg-12 col-md-9">
         <div class="card border-0 shadow-lg">
@@ -85,7 +73,7 @@
 </style>
 
 <script>
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import { ref } from 'vue';
 import toast from '../functions.js';
 import globalStore from '../stores/global';
@@ -93,6 +81,9 @@ import { useRouter } from 'vue-router';
 
 
 export default {
+  components: {
+    RouterLink
+  },
   setup(){
     const store = globalStore();
     const router = useRouter();
