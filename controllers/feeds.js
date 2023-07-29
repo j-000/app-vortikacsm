@@ -36,9 +36,7 @@ class FeedsController {
     try {
       const _id = new ObjectId(req.params.feedid);
       const feed = await FeedService.getOne({ orgid, _id }, {__v: 0});
-      
       const totalFeedJobs = (await JobsService.getMany({ feedid: _id })).length;
-
       res.json({feed: {...feed.toJSON(), totalFeedJobs}});
     } catch (err) {
       res.json({ error: err });
