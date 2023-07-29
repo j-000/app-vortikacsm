@@ -4,11 +4,7 @@ const { FeedModel } = require("../../models/feed");
 async function create(name, url, type, firstElementKey, dataType, orgid) {
   try {
     const result = await FeedModel.create({name, url, type, firstElementKey, dataType, orgid});
-    
-    // TODO: Need to do this on the Mapping Servive
-    // create a new mapping
-    // Insert mapping object tagged with new feed id.
-    
+    return result;    
   } catch (error) {
     throw error;
   }
