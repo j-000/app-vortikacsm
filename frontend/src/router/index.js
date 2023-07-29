@@ -5,6 +5,8 @@ import LoginPage from '../views/LoginPage.vue'
 import DashboardPage from '../views/DashboardPage.vue'
 import ForgotPwdPage from '../views/ForgotPwdPage.vue'
 import FeedsPage from '../views/FeedsPage.vue'
+import EditBJPPage from '../views/cms/EditBJPPage.vue'
+import CMSEditorPage from '../views/cms/CMSEditor.vue'
 import FeedDetailsPage from '../views/FeedDetailsPage.vue'
 import globalStore from '../stores/global';
 
@@ -48,6 +50,11 @@ const router = createRouter({
       component: FeedsPage
     },
     {
+      path: '/cms/editor/:templateid',
+      name: 'cms-editor',
+      component: CMSEditorPage
+    },
+    {
       path: '/feeds/:feedid',
       name: 'feed-details',
       component: FeedDetailsPage
@@ -55,7 +62,7 @@ const router = createRouter({
     {
       path: '/cms-edit-bdp',
       name: 'cms-edit-bdp',
-      component: HomeView
+      component: EditBJPPage
     },
     {
       path: '/cms-edit-adp',
