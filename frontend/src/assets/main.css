@@ -60,6 +60,33 @@ nav {
  border-radius: 50%;
 }
 
+#greenDot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid green;
+    background-color: green;
+    border-radius: 50%;
+}
+
+#orangeDot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid orange;
+    background-color: orange;
+    border-radius: 50%;
+}
+
+#grayDot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid gray;
+    background-color: gray;
+    border-radius: 50%;
+}
+
 .animate-pulse {
  animation: pulse 1.5s linear infinite alternate-reverse;
 }
