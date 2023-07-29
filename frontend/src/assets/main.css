@@ -60,6 +60,10 @@ nav {
  border-radius: 50%;
 }
 
+.animate-pulse {
+ animation: pulse 1.5s linear infinite alternate-reverse;
+}
+
 @keyframes pulse {
     0%{
         opacity: 0.1;
