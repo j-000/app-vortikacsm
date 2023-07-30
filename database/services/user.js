@@ -5,7 +5,7 @@ const { BASIC_PERIMISSIONS } = require("../../middlewares/permissions");
 
 async function create(name, surname, email, password) {
   try {
-  const orgid = await UserModel.countDocuments() + 1;
+  const orgid = await UserModel.countDocuments() + 1; //#TODO - change this to use appsettings doc
   const salt = await bcrypt.genSalt(10);
   const hashPwd = await bcrypt.hash(password, salt);
   const permissions = BASIC_PERIMISSIONS;
