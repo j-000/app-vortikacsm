@@ -1,13 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import HomeView from '../views/HomeView.vue'
 import RegisterPage from '../views/RegisterPage.vue'
 import LoginPage from '../views/LoginPage.vue'
 import DashboardPage from '../views/DashboardPage.vue'
 import ForgotPwdPage from '../views/ForgotPwdPage.vue'
 import FeedsPage from '../views/FeedsPage.vue'
-import EditBJPPage from '../views/cms/EditBJPPage.vue'
+
+import DraftPages from '../views/cms/DraftPages.vue'
+import PreviewPages from '../views/cms/PreviewPages.vue'
+import LivePages from '../views/cms/LivePages.vue'
+
+import LearnCSM from '../views/learn/Main.vue'
 import CMSEditorPage from '../views/cms/CMSEditor.vue'
 import FeedDetailsPage from '../views/FeedDetailsPage.vue'
+import LogoutPage from '../views/LogoutPage.vue'
 import globalStore from '../stores/global';
 
 
@@ -60,34 +67,29 @@ const router = createRouter({
       component: FeedDetailsPage
     },
     {
-      path: '/cms-edit-bdp',
-      name: 'cms-edit-bdp',
-      component: EditBJPPage
+      path: '/draft-pages',
+      name: 'draft-pages',
+      component: DraftPages
     },
     {
-      path: '/cms-edit-adp',
-      name: 'cms-edit-adp',
-      component: HomeView
+      path: '/preview-pages',
+      name: 'preview-pages',
+      component: PreviewPages
     },
     {
-      path: '/cms-edit-srp',
-      name: 'cms-edit-srp',
-      component: HomeView
+      path: '/live-pages',
+      name: 'live-pages',
+      component: LivePages
     },
     {
-      path: '/cms-publish-preview',
-      name: 'cms-publish-preview',
-      component: HomeView
-    },
-    {
-      path: '/cms-publish-live',
-      name: 'cms-publish-live',
-      component: HomeView
+      path: '/learn',
+      name: 'learn',
+      component: LearnCSM
     },
     {
       path: '/logout',
       name: 'logout',
-      component: HomeView,
+      component: LogoutPage,
     }
   ]
 })
@@ -96,6 +98,11 @@ router.beforeEach((to, from, next) => {
   const store = globalStore();
   const allowedRoutes = ['home', 'register', 'login', 'forgot-password', 'logout'];
   if (allowedRoutes.includes(to.name)){
+    if (to.name == 'logout') {
+      // delete user data from store. This forces logout;
+      // Do not set this to empty {} as that evaluates to true.
+      store.updateUser(false);
+    }
     // Allowed routes;
     next();
   } else {
