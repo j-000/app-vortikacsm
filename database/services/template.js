@@ -1,9 +1,9 @@
 const { TemplateModel } = require("../../models/template");
 
 
-async function create(orgid, filepath, name, type) {
+async function create(orgid, filepath, name, status, createdUser) {
   try {
-    const result = await TemplateModel.create({ orgid, filepath, name, type});
+    const result = await TemplateModel.create({ orgid, filepath, name, status, createdUser});
     return result;    
   } catch (error) {
     throw error;
@@ -13,6 +13,15 @@ async function create(orgid, filepath, name, type) {
 async function getOne(obj, proj) {
   try {
     const result = await TemplateModel.findOne(obj, proj).exec();
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
+async function updateOne(obj, newData) {
+  try {
+    const result = await TemplateModel.findOneAndUpdate(obj, newData).exec();
     return result
   } catch (error) {
     throw error
@@ -42,5 +51,6 @@ module.exports = {
   create,
   getMany,
   getOne,
+  updateOne,
   remove
 }
