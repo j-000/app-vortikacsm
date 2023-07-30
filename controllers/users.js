@@ -83,7 +83,7 @@ class UsersController {
                   
         if (isValidPwd) {
           // Create signed bscypt object with user data
-          const userData = { userid: user._id, orgid: user.orgid, permissions: user.permissions}
+          const userData = { userid: user._id, name: user.name, orgid: user.orgid, permissions: user.permissions}
           const token = jwt.sign(userData, SECRET_KEY, { expiresIn: '24h' });
           // Set last login
           UserService.update({_id: user._id}, {lastLogin: Date.now()})
