@@ -6,7 +6,7 @@
           <div class="card-body p-0">
             <div class="row">
               <div class="col-lg-5 d-none d-lg-block bg-login-image"></div>
-              <div class="col-lg-6">
+              <div class="col">
                 <div class="p-5">
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
@@ -69,6 +69,9 @@
   display: flex;
   flex-direction: column;
   gap: 1em;
+}
+.row {
+  height: 450px;
 }
 </style>
 

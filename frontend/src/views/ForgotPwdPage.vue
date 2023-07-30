@@ -1,10 +1,9 @@
 <template>
 <div class="container">
-    <div id="alert"></div>
     <div class="card border-0 shadow-lg my-5">
       <div class="card-body p-0">
         <!-- Nested Row within Card Body -->
-        <div class="row">
+        <div class="row firstRow">
           <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
           <div class="col-lg-7">
             <div class="p-5">
@@ -64,5 +63,9 @@ body {
   }
   .p-5 {
     width: 100%;
+  }
+
+  .firstRow{
+    height: 450px;
   }
 </style>
