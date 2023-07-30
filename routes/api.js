@@ -98,7 +98,9 @@ apiRoutes.route('/users/:userid')
 
 /**
  * 
- * /api/cms/templates?type= ('all', 'bjdp', 'ajdp', 'srp') - Get templates; Add template
+ * /api/cms/templates/list?type= ('all', 'bjdp', 'ajdp', 'srp') - Get templates; Add template
+ * /api/cms/templates/:templateid            - Get the template HTML in json response
+ * /api/cms/templates/:templateid/preview    - Preview template
  */
 
 apiRoutes.route('/cms/templates/list')
@@ -106,8 +108,10 @@ apiRoutes.route('/cms/templates/list')
   .post(AuthRequired, TemplateController.createTemplate)
 
   
-apiRoutes.route('/cms/templates/:templateid')
-  .get(AuthRequired, TemplateController.getTemplateHTML)
+apiRoutes.route('/cms/templates/:pageid')
+  .get(AuthRequired, TemplateController.getPageHtml)
+  .post(AuthRequired, TemplateController.publishPage)
+  .put(AuthRequired, TemplateController.updatePageHtml)
 
   
 module.exports = {
