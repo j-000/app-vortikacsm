@@ -1,13 +1,16 @@
 const { default: mongoose } = require("mongoose");
 
-const templateSchema = new mongoose.Schema({
+const pageSchema = new mongoose.Schema({
   orgid: {
     type: Number,
     required: [true, 'orgid required']
   },
-  type: {
+  fileLocked: {
+    type: Boolean,
+    default: false
+  },
+  fileLockedBy: {
     type: String,
-    required: [true, 'template type required']
   },
   filepath: {
     type: String,
@@ -19,7 +22,9 @@ const templateSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: 'new'
+  },
+  createdUser: {
+    type: String,
   },
   lastEdited: {
     type: Object,
@@ -38,7 +43,7 @@ const templateSchema = new mongoose.Schema({
   } 
 }, {timestamps: true})
 
-const TemplateModel = mongoose.model('templates', templateSchema);
+const TemplateModel = mongoose.model('templates', pageSchema);
 
 module.exports = {
   TemplateModel
