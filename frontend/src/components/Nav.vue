@@ -61,6 +61,7 @@
                       <i class="fas fa-flask me-2"></i>
                       <span>Preview</span>
                     </div>
+                    <i class="fa-solid fa-up-right-from-square text-muted"></i>
                   </a>
                 </li>
                 <li>
@@ -69,8 +70,7 @@
                       <i class="fas fa-globe me-2"></i>
                       <span>Live</span>
                     </div>
-                    <div>
-                    </div>
+                    <i class="fa-solid fa-up-right-from-square text-muted"></i>
                   </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
