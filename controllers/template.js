@@ -103,26 +103,28 @@ class TemplateController {
   static async updatePageHtml(req, res){
     const orgid = req.user.orgid;
     try {
+      // New content for file
       const newContent = req.body.newContent;
+      // Id of file to be updated 
       const _id = new ObjectId(req.params.pageid);
-
-      // Update file in filesystem
+      // Get file doc
       const fileDoc = await TemplateService.getOne({ _id });
-
-      fs.writeFile(fileDoc.filepath, newContent, { encoding: 'utf-8', flag: 'w' }, (err) => {
-        if (err) {
-          res.json({erro: 'Error saving file.'})
-        }
-      });
-
-      // Update template doc
-      const updated = await TemplateService.updateOne({ _id }, { 
-        fileLocked: false, fileLockedBy: '', lastEdited: { timestamp: Date.now(), byUser: req.user.name } });
-      
-      
+      // Check file isn't locked
+      if (fileDoc.fileLocked) {
+        res.status(403).json({error: `File locked by ${fileDoc.fileLockedBy}.`});
+      } else {
+        // Update file in filesystem
+        fs.writeFile(fileDoc.filepath, newContent, { encoding: 'utf-8', flag: 'w' }, (err) => {
+          if (err) {
+            res.json({erro: 'Error saving file.'})
+          }
+        });
+        // Update template doc
+        const updateFileDocProperties = { fileLocked: false, fileLockedBy: '', lastEdited: { timestamp: Date.now(), byUser: req.user.name } }
+        const updated = await TemplateService.updateOne({ _id }, updateFileDocProperties);
         res.json({ success: true, message: 'File saved successfully.' })
+      }
     } catch(error) {
-      console.log(error);
       res.json({error});
     }
   }
