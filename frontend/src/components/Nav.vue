@@ -1,8 +1,3 @@
-<script setup>
-import globalStore from '../stores/global';
-
-const store = globalStore();
-</script>
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
@@ -61,22 +56,22 @@ const store = globalStore();
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">View Sites</h6></li>
                 <li>
-                  <RouterLink class="dropdown-item d-flex justify-content-between" :to="{name: 'home'}">
+                  <a @click="navigate" class="dropdown-item d-flex justify-content-between" to="">
                     <div>
                       <i class="fas fa-flask me-2"></i>
                       <span>Preview</span>
                     </div>
-                  </RouterLink>
+                  </a>
                 </li>
                 <li>
-                  <RouterLink class="dropdown-item d-flex justify-content-between" :to="{name: 'home'}">
+                  <a @click="navigate" class="dropdown-item d-flex justify-content-between" to="">
                     <div>
                       <i class="fas fa-globe me-2"></i>
                       <span>Live</span>
                     </div>
                     <div>
                     </div>
-                  </RouterLink>
+                  </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">Learn</h6></li>
@@ -157,12 +152,28 @@ const store = globalStore();
 </template>
 
 <script>
+import globalStore from '../stores/global';
 
 export default {
-    setup(){
+  setup(){
+    const store = globalStore();
 
+    const navigate = (to) => {
+      if (to === 'preview') {
+        window.open(store.domains.preview, '_blank');
+      } else {
+        window.open(store.domains.live, '_blank');
+      }
     }
+
+    return {
+      navigate,
+      store
+    }
+  }
 }
+
+
 </script>
 
 <style>

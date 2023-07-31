@@ -92,7 +92,8 @@ class UsersController {
           
           // Obtain the user obj again but remove sensitive props
           const u = await UserService.getOne({ email }, { hashPwd: 0, __v: 0 })
-          res.status(200).json({ success: true, token, user: u });
+          res.status(200).json({ success: true, token, user: u, domains: {live: process.env.LIVE_DOMAIN, preview: process.env.PREVIEW_DOMAIN} });
+
         } else {
           res.status(403).json({ error: 'Invalid password.' })
         }

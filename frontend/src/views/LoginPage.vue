@@ -109,6 +109,7 @@ export default {
         const json = await response.json();
         if(json.success){
           store.updateUser({...json.user, token: json.token});
+          store.updateDomains(json.domains);
           sessionStorage.setItem('store', JSON.stringify({ user: store.user }));
           router.push('/dashboard')
         } else {
