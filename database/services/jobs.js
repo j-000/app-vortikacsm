@@ -55,6 +55,15 @@ async function remove(obj) {
   }
 }
 
+async function removeMany(obj) {
+  try {
+    const result = await JobModel.deleteMany(obj).exec();
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
 
 module.exports = {
   create,
@@ -62,5 +71,6 @@ module.exports = {
   getManyPaginated,
   getOne,
   remove,
-  update
+  update,
+  removeMany
 }

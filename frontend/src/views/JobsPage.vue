@@ -25,7 +25,7 @@
             <tr v-for="job in jobs" :key="job._id">
               <td v-for="(prop, i) in propsToDisplay" :key="i">
                 <span v-if="job.props[prop] !== undefined">
-                  {{ job.props[prop] }}
+                  {{ job.props[prop].toString() }}
                 </span>
                 <span v-else class="text-muted">
                   "{{ prop }}" is not available as a field for job {{ job._id }}. This job is likely from a different source file.
