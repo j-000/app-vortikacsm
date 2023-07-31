@@ -6,16 +6,16 @@
     <div class="row my-2">
       <div class="col-lg-3">
         <h2>Available fields</h2>
-        <form v-if="jobs" action="#">
-          <div v-for="(prop, index) in Object.keys(jobs[0].props).sort()" :key="index" class="form-check">
+        <p>Pages of 25 jobs.</p>
+        <form v-if="jobs.length > 0" action="#">
+          <div v-for="(prop, index) in allProps" :key="index" class="form-check">
             <input v-model="propsToDisplay" class="form-check-input" type="checkbox" :value="prop" :id="`p${index}`">
-            <label class="form-check-label" :for="`p${index}`">{{ prop }}</label>
+            <label class="form-check-label" :for="`p${index}`">{{ prop }} ({{ jobs.filter( j => j.props[prop] !== undefined).length }})</label>
           </div>
         </form>
       </div>
       <div class="col">
-        <h2>Jobs</h2>
-        <table class="table">
+        <table v-if="propsToDisplay.length > 0" class="table">
           <thead>
             <tr>
               <th v-for="(prop, i) in propsToDisplay" :key="i">{{ prop }}</th>
@@ -24,19 +24,30 @@
           <tbody>
             <tr v-for="job in jobs" :key="job._id">
               <td v-for="(prop, i) in propsToDisplay" :key="i">
-                {{ job.props[prop] }}
+                <span v-if="job.props[prop] !== undefined">
+                  {{ job.props[prop] }}
+                </span>
+                <span v-else class="text-muted">
+                  "{{ prop }}" is not available as a field for job {{ job._id }}. This job is likely from a different source file.
+                </span>
               </td>
             </tr>
           </tbody>
+          <div class="d-flex justify-content-between">
+            <ul class="pagination">
+              <li class="page-item">
+                <a @click.prevent="previousPage" class="page-link" href="#">Previous</a>
+              </li>
+              <li class="page-item">
+                <a @click.prevent="nextPage" class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+            <span class="text-muted">Page {{ currentPage }} of {{ totalPages }}</span>
+          </div>
         </table>
+        
       </div>
     </div>
-    <ul>
-      
-      <!-- <li v-for="job in jobs" :key="job._id">
-        {{ Object.keys(job.props) }}
-      </li> -->
-    </ul>
   </div>
 </template>
 
@@ -49,20 +60,52 @@ export default {
   setup(){
     const store = global();
     const jobs = ref([]);
+    const allProps = ref([]);
     const propsToDisplay = ref([]);
-    const importedJobs = async () => {
-      const response = await fetch(`http://localhost:3001/api/jobs`, {headers: {authorization: `Bearer ${store.user.token}`}});
+    const currentPage = ref(1);
+    const totalPages = ref(1)
+
+    const importedJobs = async ({page}) => {
+      const response = await fetch(`http://localhost:3001/api/jobs?page=${page}`, {headers: {authorization: `Bearer ${store.user.token}`}});
       const json = await response.json();
       if (json.error){ 
         toast(json.error);
       } else {
         jobs.value = json.allJobs;
+        currentPage.value = json.currentPage;
+        totalPages.value = json.totalPages;
+
+        let temp = [];
+        let temp2 = [];
+        json.allJobs.forEach(job => {
+          temp = [ ...temp,  ...Object.keys(job.props)]
+          temp2 = [ ...temp2, job.feedid ]
+        })
+        allProps.value = new Set(temp);
       }
     }
-    importedJobs();
+
+    importedJobs({page: 1});
+
+    const nextPage = () => {
+      if (currentPage.value > 0 && currentPage.value < totalPages.value) {
+        importedJobs({page: currentPage.value + 1});
+      }
+    } 
+    const previousPage = () => {
+      if (currentPage.value > 1 && currentPage.value <= totalPages.value) {
+        importedJobs({page: currentPage.value - 1});
+      }
+    }
+
     return {
       jobs,
-      propsToDisplay
+      propsToDisplay,
+      nextPage,
+      previousPage,
+      currentPage,
+      totalPages,
+      allProps
     }
   }
 }
