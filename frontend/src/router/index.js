@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from '../views/HomeView.vue'
+import HomePage from '../views/HomePage.vue'
 import RegisterPage from '../views/RegisterPage.vue'
 import LoginPage from '../views/LoginPage.vue'
 import DashboardPage from '../views/DashboardPage.vue'
 import ForgotPwdPage from '../views/ForgotPwdPage.vue'
 import FeedsPage from '../views/FeedsPage.vue'
-
+import JobsPage from '../views/JobsPage.vue'
 import DraftPages from '../views/cms/DraftPages.vue'
 import PreviewPages from '../views/cms/PreviewPages.vue'
 import LivePages from '../views/cms/LivePages.vue'
@@ -24,7 +24,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomePage
     },
     {
       path: '/register',
@@ -49,7 +49,7 @@ const router = createRouter({
     {
       path: '/jobs',
       name: 'jobs',
-      component: HomeView
+      component: JobsPage
     },
     {
       path: '/feeds',

@@ -70,7 +70,7 @@ apiRoutes.route('/dashboard-info')
 
 /**
  * 
- * /api/jobs - Get all jobs for orgid of user logged in
+ * /api/jobs?page= - Get all jobs for orgid of user logged in
  * 
  */
 
