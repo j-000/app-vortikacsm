@@ -27,9 +27,11 @@ export default {
     const store = global()
     // Check store is in sessionStorage
     const storeInSessionStorage = JSON.parse(sessionStorage.getItem('store'));
+    const domainsInSessionStorage = JSON.parse(sessionStorage.getItem('domains'));
     if (storeInSessionStorage){
       // Update store
       store.updateUser(storeInSessionStorage.user);
+      store.updateDomains(domainsInSessionStorage);
     }
   },
   components:{

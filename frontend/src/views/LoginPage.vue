@@ -111,6 +111,7 @@ export default {
           store.updateUser({...json.user, token: json.token});
           store.updateDomains(json.domains);
           sessionStorage.setItem('store', JSON.stringify({ user: store.user }));
+          sessionStorage.setItem('domains', JSON.stringify({ ...store.domains }));
           router.push('/dashboard')
         } else {
           toast(json.error);
