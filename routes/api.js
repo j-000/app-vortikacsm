@@ -44,16 +44,26 @@ apiRoutes.route('/feeds/:feedid')
   .get(AuthRequired, FeedsController.getById)
   .delete(AuthRequired, FeedsController.delete)
 
-apiRoutes.route('/feeds/:feedid/mappings')
-  .get(AuthRequired, MappingController.getAll)
-  .post(AuthRequired, MappingController.update)
-
 apiRoutes.route('/feeds/:feedid/source-fields')
   .get(AuthRequired, JobsController.getSourceFields)
-  // .put()
 
 apiRoutes.route('/feeds/:feedid/run-import')
   .post(AuthRequired, FeedsController.runImport)
+
+
+  
+/**
+ * 
+ *  /api/mappings
+ *  /api/mappings/:feedid
+ * 
+ */
+apiRoutes.route('/mappings')
+  .get(AuthRequired, MappingController.getAll)
+
+apiRoutes.route('/mappings/feed/:feedid')
+  .get(AuthRequired, MappingController.getByFeedid)
+  .post(AuthRequired, MappingController.update)
 
 
 
