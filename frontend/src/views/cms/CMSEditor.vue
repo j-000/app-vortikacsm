@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Vortika<sup>CSM</sup> editor</h1>
+    <h1>Vortika<sup>CSM</sup> editor</h1> 
     <nav class="navbar navbar-expand-lg bg-light mt-4">
       <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
