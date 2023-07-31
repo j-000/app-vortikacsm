@@ -97,7 +97,7 @@ export default {
 
     const getMappings = async () => {
       const response = await fetch(
-        `http://localhost:3001/api/feeds/${props.feedid}/mappings`,
+        `http://localhost:3001/api/mappings/feed/${props.feedid}`,
         { headers: { authorization: `Bearer ${store.user.token}` } }
       );
       const json = await response.json();
@@ -131,7 +131,7 @@ export default {
 
 
     const saveNewMappings = async () => {
-      const response = await fetch(`http://localhost:3001/api/feeds/${props.feedid}/mappings`, {
+      const response = await fetch(`http://localhost:3001/api/mappings/feed/${props.feedid}`, {
         method: 'post',
         headers: {
           authorization: `Bearer ${store.user.token}`,
