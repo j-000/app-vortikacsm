@@ -20,10 +20,17 @@
 import { RouterLink, RouterView } from 'vue-router';
 import Nav from './components/Nav.vue';
 import Toast from './components/Toast.vue';
+import global from './stores/global';
 
 export default {
   setup() {
-    
+    const store = global()
+    // Check store is in sessionStorage
+    const storeInSessionStorage = JSON.parse(sessionStorage.getItem('store'));
+    if (storeInSessionStorage){
+      // Update store
+      store.updateUser(storeInSessionStorage.user);
+    }
   },
   components:{
     RouterLink,

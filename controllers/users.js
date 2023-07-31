@@ -90,10 +90,8 @@ class UsersController {
           // Set cookie token
           res.cookie('token', token, { httpOnly: true });
           
-          // Delete hashPwd from being sent to client
-          const u = user.toJSON()
-          delete u.hashPwd;
-
+          // Obtain the user obj again but remove sensitive props
+          const u = await UserService.getOne({ email }, { hashPwd: 0, __v: 0 })
           res.status(200).json({ success: true, token, user: u });
         } else {
           res.status(403).json({ error: 'Invalid password.' })
@@ -102,7 +100,6 @@ class UsersController {
         res.status(404).json({ error: 'User not registered.' });
       }
     } catch (error) {
-      console.log(error);
       res.status(500).json({error: 'Server error.'});
     }
   }

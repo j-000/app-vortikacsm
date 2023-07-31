@@ -102,6 +102,8 @@ router.beforeEach((to, from, next) => {
       // delete user data from store. This forces logout;
       // Do not set this to empty {} as that evaluates to true.
       store.updateUser(false);
+      // clear store from session storage
+      sessionStorage.clear();
     }
     // Allowed routes;
     next();
