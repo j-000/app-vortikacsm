@@ -9,7 +9,7 @@ function setsubdomain(req, res, next) {
     if (req.hostname.includes('.')){
 
       // Only "preview" subdomain is allowed.
-      if (req.hostname === process.env.PREVIEW_DOMAIN){
+      if (process.env.PREVIEW_DOMAIN.includes(req.hostname)){
         // Set flag to 'preview'
         // This should match the same name as the preview/ templates folder
         req._subdomain = 'preview';
