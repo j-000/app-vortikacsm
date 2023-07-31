@@ -43,7 +43,7 @@ app.set('views', path.join(__dirname, 'templates/'));
 app.use(bodyParser.json())
 
 // Set static folder
-app.use(express.static('public'));
+app.use('/assets', express.static('assets'));
 
 // Allow CORS 
 // [Must stay on top of app.js and before middleware below]
