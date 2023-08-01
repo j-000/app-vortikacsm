@@ -56,7 +56,7 @@
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">View Sites</h6></li>
                 <li>
-                  <a @click="navigate" class="dropdown-item d-flex justify-content-between" to="">
+                  <a @click="navigate('preview')" class="dropdown-item d-flex justify-content-between" to="">
                     <div>
                       <i class="fas fa-flask me-2"></i>
                       <span>Preview</span>
@@ -65,7 +65,7 @@
                   </a>
                 </li>
                 <li>
-                  <a @click="navigate" class="dropdown-item d-flex justify-content-between" to="">
+                  <a @click="navigate('live')" class="dropdown-item d-flex justify-content-between" to="">
                     <div>
                       <i class="fas fa-globe me-2"></i>
                       <span>Live</span>

@@ -13,7 +13,7 @@
                 <i class="fa-solid fa-asterisk"></i>
                 Add field
               </a>
-              <ul class="dropdown-menu">
+              <ul v-if="fields" class="dropdown-menu">
                 <li @click="addField(field)" v-for="(field, i) in fields.sort()" :key="i"><a class="dropdown-item" href="#">{{ field }}</a></li>
               </ul>
             </li>
@@ -120,6 +120,7 @@ export default {
     return {
       publishToPreview,
       fields,
+      editorAlertMessage,
       addField
     }
   },
