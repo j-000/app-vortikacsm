@@ -57,6 +57,7 @@
       </div>
     </nav>
     <CodeEditorVue  :templateid="$route.params.templateid"/>
+    <button @click="publishToPreview" class="btn btn-orange">Publish to preview</button>
   </div>
 </template>
 
@@ -81,7 +82,7 @@ export default {
 
     const publishToPreview = async () => {
       if (confirm('Publish page to preview?')){
-        const response = await fetch(`http://localhost:3001/api/cms/templates/${router.params.templateid}`, {
+        const response = await fetch(`http://localhost:3001/api/cms/pages/${router.params.templateid}`, {
           method: 'post',
           headers: { authorization: `Bearer ${store.user.token}`, 'Content-Type': 'application/json'},
           body: JSON.stringify({ publish: 'preview' })
