@@ -4,4 +4,7 @@ node_modules/
 _* 
 .vscode
 *.http
-templates 
+templates
+
+# Nestjs backend of vortika 
+vortika 
