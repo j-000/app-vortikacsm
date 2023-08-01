@@ -5,6 +5,14 @@ const pageSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'orgid required']
   },
+  pageType: {
+    type: String,
+    required: [true, 'pagetype required']
+  },
+  urlslug: {
+    type: String,
+    required: [true, 'urlslug required']
+  },
   fileLocked: {
     type: Boolean,
     default: false
@@ -43,8 +51,8 @@ const pageSchema = new mongoose.Schema({
   } 
 }, {timestamps: true})
 
-const TemplateModel = mongoose.model('templates', pageSchema);
+const PageModel = mongoose.model('pages', pageSchema);
 
 module.exports = {
-  TemplateModel
+  PageModel
 }
