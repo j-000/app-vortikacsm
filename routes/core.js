@@ -11,32 +11,22 @@ coreRoutes.route('/')
 
 
 coreRoutes.route('/:urlslug')
-  .get(async (req, res) => {
+  .get(async (req, res) => {   
     // Check file exist with this urlslug
     const urlslug = req.params.urlslug;
-    const templateDoc = await PageService.getOne({ urlslug });
-    // Default template (404.html)
-    let notFoundTemplate = "404.html";
-    let templateName = "";
-    // Context obj
-    let context = {};
-    if (templateDoc) {
+    const page = await PageService.getOne({ urlslug });
+    if (page) {
       // Check status as templates may not be published (preview or live);
-      if (templateDoc.status === req._subdomain) {
+      if (page.status === req._subdomain) {
         // Template is allowed to be shown on domain
-        templateName = templateDoc.name;
-        // Update context acordingly 
-        context = {}
+        return res.render(`${req._subdomain}/${page.name}`);
       } else {
         // Template exists but it's not published in subdomain requested
-        templateName = notFoundTemplate;
+        return res.render(`${req._subdomain}/404.html`)
       }
     } else {
-      // Template doesn't exist with this urlslug
-      templateName = notFoundTemplate;
+      return res.render(`${req._subdomain}/404.html`)
     }
-    // Render response
-    res.render(`${req._subdomain}/${templateName}`, context);
 })
 
 module.exports = {

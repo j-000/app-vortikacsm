@@ -38,7 +38,7 @@ class PagesController {
         return 
       }
       // Prevent users from editing same file.
-      if (file.fileLocked){
+      if (file.fileLocked && file.fileLockedBy !== req.user.name){
         const fileLockedEditorMessage = `
         ***************************************
         *                                     *
@@ -151,22 +151,18 @@ class PagesController {
       const fileDoc = await PageService.getOne({ _id });
 
       if (publish === 'preview') {
-
         // Move file from drafts to preview folder
         const newFilePath = path.join(__dirname, '../templates/preview/', fileDoc.name);
         fsX.move(fileDoc.filepath, newFilePath, (err) => {
           if (err) {
-            res.json({error: 'Error publishing file.'});
-            return
+            return res.json({error: 'Error publishing file.'});
           }
         })
-
         // Update file doc in db
         const updated = await PageService.updateOne({ _id }, {
           filepath: newFilePath, status: publish, lastPublished: { timestamp : Date.now(), to: publish, byUser: req.user.name }
         })
-
-        res.json({success: true, message: 'File published successfully to preview.'})
+        return res.json({success: true, message: 'File published successfully to preview.'})
       } else if (publish === 'live') {
         // more convoluted as needed to have 2 versions.
 
