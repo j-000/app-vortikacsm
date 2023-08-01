@@ -59,7 +59,12 @@ app.use((req, res, next) => logrequests(req, res, next))
 // Middleware to ensure corret stage (public/preview) is set.
 app.use((req, res, next) => setsubdomain(req, res, next));
 
+// Core routes
 app.use('/', coreRoutes);
+
+// Set default content type for api responses
+app.use((req, res, next) => { res.header({'Content-Type': 'application/json'}); next(); })
+// Api routes
 app.use('/api', apiRoutes);
 
 
