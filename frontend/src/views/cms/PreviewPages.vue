@@ -53,7 +53,7 @@
       const newFileType = ref('');
   
       const getFiles = async () => {
-        const response = await fetch(`http://localhost:3001/api/cms/templates/list?status=preview`, {
+        const response = await fetch(`http://localhost:3001/api/cms/pages/list?status=preview`, {
           headers: { authorization: `Bearer ${store.user.token}`}
         });
         const json = await response.json();
