@@ -2,12 +2,12 @@ const { ObjectId } = require('mongodb');
 const fs = require('fs');
 const fsX = require('fs-extra');
 const path = require('path');
-const TemplateService = require('../database/services/template');
+const PageService = require('../database/services/page');
 const UserService = require('../database/services/user');
 
-class TemplateController {
+class PagesController {
 
-  static async getTemplate(req, res){
+  static async getPage(req, res){
     const orgid = req.user.orgid;
     
     let status = req.query.status.toLowerCase(); 
@@ -19,7 +19,7 @@ class TemplateController {
       try {
         if (status == 'live') status = 'public';
         let filter = { status };
-        const templates = await TemplateService.getMany(filter, {__v: 0, filepath: 0});
+        const templates = await PageService.getMany(filter, {__v: 0, filepath: 0});
         res.json({ templates });
       } catch (error) {
         console.log(error);
@@ -32,7 +32,7 @@ class TemplateController {
     const orgid = req.user.orgid;
     const _id = new ObjectId(req.params.pageid);
     try {
-      const file = await TemplateService.getOne({ _id });
+      const file = await PageService.getOne({ _id });
       if (!file) {
         res.json({error: 'No file found'}); 
         return 
@@ -54,7 +54,7 @@ class TemplateController {
         if(err){
           res.json({error: 'Error getting template.'})
         } else {
-          const lockFile = await TemplateService.updateOne({ _id }, {fileLocked: true, fileLockedBy: req.user.name})
+          const lockFile = await PageService.updateOne({ _id }, {fileLocked: true, fileLockedBy: req.user.name})
           res.json({ fileContent });
         }
       })
@@ -64,40 +64,53 @@ class TemplateController {
     } 
   }
   
-  static async createTemplate(req, res){
-      const orgid = req.user.orgid;
-      const name = req.body.name;
-      const status = req.body.status;
+  static async createPage(req, res){
+    const orgid = req.user.orgid;
+    const { status, pageType, urlslug} = req.body;
+    const name = req.body.name + '.html';
 
-      // Check filename and folder is valid
-      const isValidName = /[a-zA-Z\d_]+\.html/gi.test(name);
-      const isValidSatus = ['draft', 'preview', 'live', 'public'].includes(status);
-      
-      // TODO: Check name isn't taken - should not happen to have 2 files with same name in
-      // draft and in preview.
- 
-      if (!isValidName || !isValidSatus) {
-        res.json({error: 'Only letters (a-z A-Z), numbers (0 - 9) or "_" allowed. Example: about.html'})
+    // validate data
+    const isValidName = /[a-zA-Z\d_]+\.html/gi.test(name);
+    const isNameTaken = await PageService.getOne({ name });
+    const isValidSatus = ['draft', 'preview', 'live', 'public'].includes(status);
+    const isValidPageType = ['content', 'template', 'jobdetails', 'searchresults'].includes(pageType);
+    const isValidSlug = /[a-z\-\d]+/gi.test(urlslug)
+
+    // Hanlde invalid data
+    if (isNameTaken) {
+      return res.json({error: `Already exists a page named "${name}".`});
+    }
+    if (!isValidName) {
+      return res.json({error: 'Only letters (a-z A-Z), numbers (0 - 9) or "_" allowed. Example: about.html'})
+    } 
+    if (!isValidSatus){
+      return res.json({error: `"${status}" is not a valid page status.`});
+    }
+    if (!isValidPageType){
+      return res.json({error: `"${pageType}" is not a valid page type.`});
+    }
+    if (!isValidSlug){
+      return res.json({error: `"${urlslug}" is not a valid URL slug.`});
+    }
+
+    const filepath = path.join(__dirname, '../templates/', status ,`${name}`);
+    try{
+      // Create TemplateModel doc to keep track of file changes.
+      const user = await UserService.getOne({ _id: new ObjectId(req.user.userid)});
+      const createdUser = user.name;
+      const templateStats = await PageService.create(orgid, filepath, name, status, createdUser, pageType, urlslug);
+    } catch (error) {
+      res.json({error});
+      return;
+    }
+    const placeholderHTML = `<h1>VortikaCSM - Your new draft page is ready!</h1>`;
+    fs.writeFile(filepath, placeholderHTML, (err) => {
+      if (err) {
+        res.json({error: 'Error creating file.'})
       } else {
-        const filepath = path.join(__dirname, '../templates/', status ,`${name}`);
-        try{
-          // Create TemplateModel doc to keep track of file changes.
-          const user = await UserService.getOne({ _id: new ObjectId(req.user.userid)});
-          const createdUser = user.name;
-          const templateStats = await TemplateService.create(orgid, filepath, name, status, createdUser);
-        } catch (error) {
-          res.json({error});
-          return;
-        }
-        const placeholderHTML = `<h1>VortikaCSM - Your new draft page is ready!</h1>`;
-        fs.writeFile(filepath, placeholderHTML, (err) => {
-          if (err) {
-            res.json({error: 'Error creating file.'})
-          } else {
-            res.json({success: true, message: 'File created.'})
-          }
-        });
-      }   
+        res.json({success: true, message: 'File created.'})
+      }
+    });
   }
 
   static async updatePageHtml(req, res){
@@ -108,9 +121,9 @@ class TemplateController {
       // Id of file to be updated 
       const _id = new ObjectId(req.params.pageid);
       // Get file doc
-      const fileDoc = await TemplateService.getOne({ _id });
-      // Check file isn't locked
-      if (fileDoc.fileLocked) {
+      const fileDoc = await PageService.getOne({ _id });
+      // Check file isn't locked by another user
+      if (fileDoc.fileLocked && fileDoc.fileLockedBy !== req.user.name) {
         res.status(403).json({error: `File locked by ${fileDoc.fileLockedBy}.`});
       } else {
         // Update file in filesystem
@@ -121,7 +134,7 @@ class TemplateController {
         });
         // Update template doc
         const updateFileDocProperties = { fileLocked: false, fileLockedBy: '', lastEdited: { timestamp: Date.now(), byUser: req.user.name } }
-        const updated = await TemplateService.updateOne({ _id }, updateFileDocProperties);
+        const updated = await PageService.updateOne({ _id }, updateFileDocProperties);
         res.json({ success: true, message: 'File saved successfully.' })
       }
     } catch(error) {
@@ -135,7 +148,7 @@ class TemplateController {
     try {
       const publish = req.body.publish;
       const _id = new ObjectId(req.params.pageid);
-      const fileDoc = await TemplateService.getOne({ _id });
+      const fileDoc = await PageService.getOne({ _id });
 
       if (publish === 'preview') {
 
@@ -149,7 +162,7 @@ class TemplateController {
         })
 
         // Update file doc in db
-        const updated = await TemplateService.updateOne({ _id }, {
+        const updated = await PageService.updateOne({ _id }, {
           filepath: newFilePath, status: publish, lastPublished: { timestamp : Date.now(), to: publish, byUser: req.user.name }
         })
 
@@ -171,5 +184,5 @@ class TemplateController {
 
 
 module.exports = {
-  TemplateController
+  PagesController
 }
