@@ -6,7 +6,7 @@ const { AuthRequired } = require('../middlewares/authentication');
 const { DashboardController } = require('../controllers/dashboard');
 const { JobsController } = require('../controllers/jobs');
 const { MappingController } = require('../controllers/mapping');
-const { TemplateController } = require('../controllers/template');
+const { PagesController } = require('../controllers/page');
 
 
 
@@ -108,20 +108,20 @@ apiRoutes.route('/users/:userid')
 
 /**
  * 
- * /api/cms/templates/list?type= ('all', 'bjdp', 'ajdp', 'srp') - Get templates; Add template
- * /api/cms/templates/:templateid            - Get the template HTML in json response
- * /api/cms/templates/:templateid/preview    - Preview template
+ * /api/cms/pages/list?type= ('all', 'bjdp', 'ajdp', 'srp') - Get pages; Add template
+ * /api/cms/pages/:templateid            - Get the template HTML in json response
+ * /api/cms/pages/:templateid/preview    - Preview template
  */
 
-apiRoutes.route('/cms/templates/list')
-  .get(AuthRequired, TemplateController.getTemplate)
-  .post(AuthRequired, TemplateController.createTemplate)
+apiRoutes.route('/cms/pages/list')
+  .get(AuthRequired, PagesController.getPage)
+  .post(AuthRequired, PagesController.createPage)
 
   
-apiRoutes.route('/cms/templates/:pageid')
-  .get(AuthRequired, TemplateController.getPageHtml)
-  .post(AuthRequired, TemplateController.publishPage)
-  .put(AuthRequired, TemplateController.updatePageHtml)
+apiRoutes.route('/cms/pages/:pageid')
+  .get(AuthRequired, PagesController.getPageHtml)
+  .post(AuthRequired, PagesController.publishPage)
+  .put(AuthRequired, PagesController.updatePageHtml)
 
   
 module.exports = {

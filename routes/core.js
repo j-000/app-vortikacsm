@@ -1,6 +1,6 @@
 const express = require('express');
 const coreRoutes = express.Router()
-const TemplateService = require('../database/services/template')
+const PageService = require('../database/services/page')
 
 
 coreRoutes.route('/')
@@ -10,12 +10,14 @@ coreRoutes.route('/')
   })
 
 
-coreRoutes.route('/:contentPage')
+coreRoutes.route('/:urlslug')
   .get(async (req, res) => {
-    // Check file exist by checking page docs in db
-    const templateDoc = await TemplateService.getOne({ name: { $regex: req.params.contentPage, $options: 'i' } });
+    // Check file exist with this urlslug
+    const urlslug = req.params.urlslug;
+    const templateDoc = await PageService.getOne({ urlslug });
     // Default template (404.html)
-    let templateName = "404.html";
+    let notFoundTemplate = "404.html";
+    let templateName = "";
     // Context obj
     let context = {};
     if (templateDoc) {
@@ -25,11 +27,16 @@ coreRoutes.route('/:contentPage')
         templateName = templateDoc.name;
         // Update context acordingly 
         context = {}
-        res.render(`${req._subdomain}/${templateName}`, context);
-        return
-      } 
-      res.render(`${req._subdomain}/${templateName}`, context);
-    }  
+      } else {
+        // Template exists but it's not published in subdomain requested
+        templateName = notFoundTemplate;
+      }
+    } else {
+      // Template doesn't exist with this urlslug
+      templateName = notFoundTemplate;
+    }
+    // Render response
+    res.render(`${req._subdomain}/${templateName}`, context);
 })
 
 module.exports = {
