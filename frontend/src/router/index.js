@@ -1,20 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomePage from '../views/HomePage.vue'
-import RegisterPage from '../views/RegisterPage.vue'
-import LoginPage from '../views/LoginPage.vue'
-import DashboardPage from '../views/DashboardPage.vue'
-import ForgotPwdPage from '../views/ForgotPwdPage.vue'
-import FeedsPage from '../views/FeedsPage.vue'
-import JobsPage from '../views/JobsPage.vue'
-import DraftPages from '../views/cms/DraftPages.vue'
-import PreviewPages from '../views/cms/PreviewPages.vue'
-import LivePages from '../views/cms/LivePages.vue'
+import HomePage from '../views/Home.vue'
+import RegisterPage from '../views/Register.vue'
+import LoginPage from '../views/Login.vue'
+import DashboardPage from '../views/Dashboard.vue'
+import ForgotPwdPage from '../views/ForgotPwd.vue'
+import FeedsPage from '../views/FeedList.vue'
+import JobsPage from '../views/JobList.vue'
+import PageList from '../views/cms/PageList.vue'
 
 import LearnCSM from '../views/learn/Main.vue'
-import CMSEditorPage from '../views/cms/CMSEditor.vue'
-import FeedDetailsPage from '../views/FeedDetailsPage.vue'
-import LogoutPage from '../views/LogoutPage.vue'
+import EditPage from '../views/cms/EditPage.vue'
+import FeedDetailsPage from '../views/FeedDetails.vue'
+import LogoutPage from '../views/Logout.vue'
 import globalStore from '../stores/global';
 
 
@@ -59,7 +57,7 @@ const router = createRouter({
     {
       path: '/cms/editor/:templateid',
       name: 'cms-editor',
-      component: CMSEditorPage
+      component: EditPage
     },
     {
       path: '/feeds/:feedid',
@@ -67,19 +65,9 @@ const router = createRouter({
       component: FeedDetailsPage
     },
     {
-      path: '/draft-pages',
-      name: 'draft-pages',
-      component: DraftPages
-    },
-    {
-      path: '/preview-pages',
-      name: 'preview-pages',
-      component: PreviewPages
-    },
-    {
-      path: '/live-pages',
-      name: 'live-pages',
-      component: LivePages
+      path: '/pages-list',
+      name: 'pages-list',
+      component: PageList
     },
     {
       path: '/learn',

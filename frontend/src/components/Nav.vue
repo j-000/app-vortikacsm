@@ -25,36 +25,17 @@
                 Career Site Manager
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><h6 class="dropdown-header">View Templates</h6></li>
+                <li><h6 class="dropdown-header">View</h6></li>
                 <li>
-                  <RouterLink class="align-items-center dropdown-item d-flex justify-content-between" :to="{name: 'draft-pages'}">
+                  <RouterLink class="align-items-center dropdown-item d-flex justify-content-between" :to="{name: 'pages-list'}">
                     <div>
                       <i class="fa-regular fa-file-lines me-2"></i>
-                      <span>Drafts</span>
+                      <span>Pages</span>
                     </div>
-                    <span id="grayDot"></span>
-                  </RouterLink>
-                </li>
-                <li>
-                  <RouterLink class="align-items-center dropdown-item d-flex justify-content-between" :to="{name: 'preview-pages'}">
-                    <div>
-                      <i class="fa-regular fa-file-lines me-2"></i>
-                      <span>Preview</span>
-                    </div>
-                    <span id="orangeDot"></span>
-                  </RouterLink>
-                </li>
-                <li>
-                  <RouterLink class="align-items-center dropdown-item d-flex justify-content-between" :to="{name: 'live-pages'}">
-                    <div>
-                      <i class="fa-regular fa-file-lines me-2"></i>
-                      <span>Live</span>
-                    </div>
-                    <span id="greenDot"></span>
                   </RouterLink>
                 </li>
                 <li><hr class="dropdown-divider"></li>
-                <li><h6 class="dropdown-header">View Sites</h6></li>
+                <li><h6 class="dropdown-header">Sites</h6></li>
                 <li>
                   <a @click="navigate('preview')" class="dropdown-item d-flex justify-content-between" to="">
                     <div>
