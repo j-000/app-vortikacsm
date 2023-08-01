@@ -24,7 +24,7 @@ export default {
       editor.setTheme('ace/theme/monokai');
       editor.session.setMode('ace/mode/html');
       editor.setOption("showPrintMargin", false);
-      const response = await fetch(`http://localhost:3001/api/cms/templates/${props.templateid}`, {
+      const response = await fetch(`http://localhost:3001/api/cms/pages/${props.templateid}`, {
         headers: { authorization: `Bearer ${store.user.token}`}
       });
       const json = await response.json();
@@ -57,7 +57,7 @@ export default {
     }
     
     const saveFile = async () => {
-      const response = await fetch(`http://localhost:3001/api/cms/templates/${props.templateid}`, {
+      const response = await fetch(`http://localhost:3001/api/cms/pages/${props.templateid}`, {
         method: 'put',
         headers: { authorization: `Bearer ${store.user.token}`, 'Content-Type': 'application/json'},
         body: JSON.stringify({
