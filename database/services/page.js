@@ -1,9 +1,9 @@
-const { TemplateModel } = require("../../models/template");
+const { PageModel } = require("../../models/page");
 
 
-async function create(orgid, filepath, name, status, createdUser) {
+async function create(orgid, filepath, name, status, createdUser, pageType, urlslug) {
   try {
-    const result = await TemplateModel.create({ orgid, filepath, name, status, createdUser});
+    const result = await PageModel.create({ orgid, filepath, name, status, createdUser, pageType, urlslug});
     return result;    
   } catch (error) {
     throw error;
@@ -12,7 +12,7 @@ async function create(orgid, filepath, name, status, createdUser) {
 
 async function getOne(obj, proj) {
   try {
-    const result = await TemplateModel.findOne(obj, proj).exec();
+    const result = await PageModel.findOne(obj, proj).exec();
     return result
   } catch (error) {
     throw error
@@ -21,7 +21,7 @@ async function getOne(obj, proj) {
 
 async function updateOne(obj, newData) {
   try {
-    const result = await TemplateModel.findOneAndUpdate(obj, newData).exec();
+    const result = await PageModel.findOneAndUpdate(obj, newData).exec();
     return result
   } catch (error) {
     throw error
@@ -30,7 +30,7 @@ async function updateOne(obj, newData) {
 
 async function getMany(obj, proj) {
   try {
-    const result = await TemplateModel.find(obj, proj).exec();
+    const result = await PageModel.find(obj, proj).exec();
     return result
   } catch (error) {
     throw error
@@ -39,7 +39,7 @@ async function getMany(obj, proj) {
 
 async function remove(obj) {
   try {
-    const result = await TemplateModel.findByIdAndDelete(obj).exec();
+    const result = await PageModel.findByIdAndDelete(obj).exec();
     return result
   } catch (error) {
     throw error
