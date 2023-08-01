@@ -58,7 +58,10 @@
     <div id="editor"></div>
     <div class="mt-3 d-flex justify-content-between">
       <p></p>
-      <button class="btn-primary btn" @click="saveFile">Save</button>
+      <div>
+        <button class="btn-primary btn me-4" @click="closeFile">Close</button>
+        <button class="btn-primary btn" @click="saveFile">Save</button>
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +70,7 @@
 import global from '../stores/global';
 import toast from '../functions';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   props: {
@@ -75,6 +79,7 @@ export default {
   setup(props) {
     const store = global();
     const fields = ref();
+    const router = useRouter();
     const editorAlertMessage = ref();
 
     const initAceEditor = async () => {
@@ -151,12 +156,18 @@ export default {
       editor.session.insert(editor.getCursorPosition(), `{{ ${field} }}`);
     }
 
+    const closeFile = async() => {
+      saveFile();
+      router.push({name: 'draft-pages'})
+    }
+
     getMappingFields();
     return {
       saveFile,
       fields,
       editorAlertMessage,
-      addField
+      addField,
+      closeFile
     }
   }
 }

@@ -2,13 +2,23 @@ const express = require('express');
 const coreRoutes = express.Router()
 const PageService = require('../database/services/page')
 
+// TODO: Create controllers for these routes
 
 coreRoutes.route('/')
   .get((req, res) => {
-    const templateName = 'index.html';
-    res.render(`${req._subdomain}/${templateName}`, {});
+    const pagename = 'index.html';
+    res.render(`${req._subdomain}/${pagename}`, {});
   })
 
+
+coreRoutes.route('/search-jobs')
+  .get(async (req, res) => {
+    const subdomain = req._subdomain;
+    const context = {
+      jobs: [{name: 'hr recruiter'}]
+    }
+    res.render(`${subdomain}/search.html`, context)
+})
 
 coreRoutes.route('/:urlslug')
   .get(async (req, res) => {   
@@ -28,6 +38,10 @@ coreRoutes.route('/:urlslug')
       return res.render(`${req._subdomain}/404.html`)
     }
 })
+
+
+
+
 
 module.exports = {
   coreRoutes

@@ -74,8 +74,7 @@ class PagesController {
     const isNameTaken = await PageService.getOne({ name });
     const isValidSatus = ['draft', 'preview', 'live', 'public'].includes(status);
     const isValidPageType = ['content', 'template', 'jobdetails', 'searchresults'].includes(pageType);
-    const isValidSlug = /[a-z\-\d]+/gi.test(urlslug)
-
+   
     // Hanlde invalid data
     if (isNameTaken) {
       return res.json({error: `Already exists a page named "${name}".`});
@@ -89,8 +88,11 @@ class PagesController {
     if (!isValidPageType){
       return res.json({error: `"${pageType}" is not a valid page type.`});
     }
-    if (!isValidSlug){
-      return res.json({error: `"${urlslug}" is not a valid URL slug.`});
+    if (status == 'content'){
+      const isValidSlug = /[a-z\-\d]+/gi.test(urlslug); 
+      if (!isValidSlug){
+        return res.json({error: `"${urlslug}" is not a valid URL slug.`});
+      }
     }
 
     const filepath = path.join(__dirname, '../templates/', status ,`${name}`);

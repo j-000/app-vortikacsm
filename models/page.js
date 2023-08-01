@@ -10,8 +10,7 @@ const pageSchema = new mongoose.Schema({
     required: [true, 'pagetype required']
   },
   urlslug: {
-    type: String,
-    required: [true, 'urlslug required']
+    type: String
   },
   fileLocked: {
     type: Boolean,
