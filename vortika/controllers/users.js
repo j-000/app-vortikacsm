@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../middlewares/authentication');
 const UserService = require('../database/services/user');
 const RoleServive = require('../database/services/role');
+const passwordValidator = require('password-validator');
 
 
 class UsersController {
@@ -11,6 +12,18 @@ class UsersController {
   static async register(req, res){
     const { name, surname, email, password } = req.body;
     try {
+      var passwordSchema = new passwordValidator();
+      passwordSchema
+        .is().min(10, 'Password must have 10 characters.')
+        .has().uppercase(1, 'Password must include uppercase characters.')
+        .has().lowercase(1, 'Password must include lowercase characters.')
+        .has().digits(2, 'Password must include at least 2 digits.')
+        .has().not().spaces(1, 'Password must not have spaces.')
+
+      const passwordValidationErrors = passwordSchema.validate(password, {details: true})
+      if (passwordValidationErrors.length > 0) {
+        return res.status(422).json({error: passwordValidationErrors.map(({message}) => { return message }).join(' ')});
+      }
       const newUser = await UserService.create(name, surname, email, password)
       res.status(201).json({success: true});
     } catch (error) {
