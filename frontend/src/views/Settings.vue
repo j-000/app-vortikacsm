@@ -80,7 +80,6 @@ export default {
         newPermissions.value[r].push(p);
       } else {
         let i = newPermissions.value[r].indexOf(p);
-        console.log(i);
         newPermissions.value[r].splice(i, 1);
       }
     } 
