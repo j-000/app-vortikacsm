@@ -28,8 +28,8 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Orgid is required']
   },
-  permissions: {
-    type: [String]
+  role: {
+    type: String
   },
   lastLogin: {
     type: Date,
