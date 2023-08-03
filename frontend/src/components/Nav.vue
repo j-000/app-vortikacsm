@@ -102,7 +102,7 @@
                 </RouterLink>
               </li>
               <li>
-                <RouterLink class="dropdown-item d-flex justify-content-between" :to="{name: 'login'}">
+                <RouterLink class="dropdown-item d-flex justify-content-between" :to="{name: 'settings'}">
                   <div>
                     <i class="fa-solid fa-gears"></i>
                     <span class="ms-2">Settings</span>
@@ -110,7 +110,7 @@
                 </RouterLink>
               </li>
               <li>
-                <RouterLink class="dropdown-item d-flex justify-content-between" :to="{name: 'login'}">
+                <RouterLink class="dropdown-item d-flex justify-content-between" :to="{name: 'users'}">
                   <div>
                     <i class="fa-solid fa-users"></i>
                     <span class="ms-2">Users</span>
