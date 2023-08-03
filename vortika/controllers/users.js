@@ -3,6 +3,7 @@ const { ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../middlewares/authentication');
 const UserService = require('../database/services/user');
+const RoleServive = require('../database/services/role');
 
 
 class UsersController {
@@ -73,7 +74,7 @@ class UsersController {
     if (!email || !password){
       return res.status(400).json({error: 'Missing email or password.'})
     }
-
+ 
     try {
       // Check if user exists
       const user = await UserService.getOne({ email });
@@ -83,7 +84,8 @@ class UsersController {
                   
         if (isValidPwd) {
           // Create signed bscypt object with user data
-          const userData = { userid: user._id, name: user.name, orgid: user.orgid, permissions: user.permissions}
+          const role = await RoleServive.getOne({ name: user.role });
+          const userData = { userid: user._id, name: user.name, orgid: user.orgid, role: user.role, permissions: role.permissions}
           const token = jwt.sign(userData, SECRET_KEY, { expiresIn: '24h' });
           // Set last login
           UserService.update({_id: user._id}, {lastLogin: Date.now()})
