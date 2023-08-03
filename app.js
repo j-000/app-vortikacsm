@@ -24,9 +24,9 @@ require('dotenv').config()
 
 
 // Connect to DB
-main().catch(err => console.log(err));
+main().catch(err => {console.log(err);});
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/database1');
+  await mongoose.connect(process.env.MONGO_DB_URL);
 }
 
 // Set view engine to Nunjucks
@@ -47,7 +47,7 @@ app.use('/assets', express.static('assets'));
 
 // Allow CORS 
 // [Must stay on top of app.js and before middleware below]
-app.use(cors({ origin: ['http://localhost:5173'] }));
+app.use(cors({ origin: process.env.CORS_ALLOWED_ORIGINS }));
 
 // Cookie Parser
 app.use(cookieParser());
@@ -66,7 +66,6 @@ app.use('/', coreRoutes);
 app.use((req, res, next) => { res.header({'Content-Type': 'application/json'}); next(); })
 // Api routes
 app.use('/api', apiRoutes);
-
 
 // Start Server
 app.listen(3001, () => {
