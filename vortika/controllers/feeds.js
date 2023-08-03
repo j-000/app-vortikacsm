@@ -5,8 +5,8 @@ const MappingsService = require('../database/services/mappings');
 const { Queue } = require('bullmq');
 
 const jobsQ = new Queue('Imports', { connection : {
-  host: 'localhost',
-  port: 6379
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT
 }})
 
 

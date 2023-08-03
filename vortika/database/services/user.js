@@ -11,12 +11,12 @@ async function create(name, surname, email, password) {
   const role = 'editor';
   const exists = await this.getOne({ email });  
   if (exists) {
-    throw new Error('User already exists.') 
+    console.log(exists)
+    throw new Error('User already exists.');
+  } else {
+    const newUser = await UserModel.create({ name, surname, email, orgid, hashPwd, role });
+    return newUser
   }
-
-  const newUser = await UserModel.create({ name, surname, email, orgid, hashPwd, role });
-  return newUser
-
 } catch (error) {
     throw error;
   }
@@ -40,9 +40,9 @@ async function getMany(obj, proj) {
   }
 }
 
-async function update(id, newData) {
+async function update(obj, newData) {
   try {
-    const result = await UserModel.findByIdAndUpdate(id, newData).exec();
+    const result = await UserModel.updateOne(obj, newData).exec();
     return result
   } catch (error) {
     throw error

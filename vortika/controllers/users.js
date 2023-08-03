@@ -7,20 +7,23 @@ const RoleServive = require('../database/services/role');
 const passwordValidator = require('password-validator');
 
 
+function checkPasswordStrength(password){
+  var passwordSchema = new passwordValidator();
+  passwordSchema
+    .is().min(10, 'Password must have 10 characters.')
+    .has().uppercase(1, 'Password must include uppercase characters.')
+    .has().lowercase(1, 'Password must include lowercase characters.')
+    .has().digits(2, 'Password must include at least 2 digits.')
+    .has().not().spaces(1, 'Password must not have spaces.')
+  return passwordSchema.validate(password, { details : true});
+}
+
 class UsersController {
 
   static async register(req, res){
     const { name, surname, email, password } = req.body;
     try {
-      var passwordSchema = new passwordValidator();
-      passwordSchema
-        .is().min(10, 'Password must have 10 characters.')
-        .has().uppercase(1, 'Password must include uppercase characters.')
-        .has().lowercase(1, 'Password must include lowercase characters.')
-        .has().digits(2, 'Password must include at least 2 digits.')
-        .has().not().spaces(1, 'Password must not have spaces.')
-
-      const passwordValidationErrors = passwordSchema.validate(password, {details: true})
+      const passwordValidationErrors = checkPasswordStrength(password)      
       if (passwordValidationErrors.length > 0) {
         return res.status(422).json({error: passwordValidationErrors.map(({message}) => { return message }).join(' ')});
       }
@@ -32,7 +35,25 @@ class UsersController {
   }
 
   static async addNewUser(req, res) {
-    await this.register(req, res);
+    const { name, surname, email, password, role } = req.body;
+    try {
+      const passwordValidationErrors = checkPasswordStrength(password)      
+      if (passwordValidationErrors.length > 0) {
+        return res.status(422).json({error: passwordValidationErrors.map(({message}) => { return message }).join(' ')});
+      }
+      const _role = await RoleServive.getOne({ name: role });
+      if (_role) {
+        // Create new user.
+        // Set orgid and role as requested.
+        const newUser = await UserService.create(name, surname, email, password);
+        await UserService.update({ email }, { orgid: req.user.orgid, role });
+        res.status(201).json({success: true, message: 'User added.'});
+      } else {
+        res.status(422).json({success: true, message: 'Invalid role.'});
+      }
+    } catch (error) {
+      res.status(500).json({error: error.message});
+    }
   }
 
   static async update(req, res) {
