@@ -31,19 +31,14 @@ async function main() {
 
 // Set view engine to Nunjucks
 app.set('view engine', 'njk');
-nunjucks.configure('templates', {
-  autoescape: true,
-  express: app,
-});
+nunjucks.configure('templates/views', { autoescape: true, express: app });
 
-// Set templates folder
-app.set('views', path.join(__dirname, 'templates/'));
 
 // Use bodyparser to parse JSON requests
 app.use(bodyParser.json())
 
 // Set static folder
-app.use('/assets', express.static('assets'));
+app.use('/templates/assets', express.static('templates/assets'));
 
 // Allow CORS 
 // [Must stay on top of app.js and before middleware below]
