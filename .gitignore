@@ -1,10 +1,6 @@
 node_modules/
-
 # Ignore any file starting with "_"
 _* 
 .vscode
 *.http
-templates
-
-# Nestjs backend of vortika 
-vortika 
+templates 

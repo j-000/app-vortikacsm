@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+
+  redisdb:
+    image: redis
+    ports: 
+      - "6379:6379"
+    networks:
+      - net1
+  
+  mongodb:
+    image: mongo
+    ports: 
+      - "27017:27017"
+    networks:
+      - net1
+
+  importerservice:
+    build: ./importer
+    ports:
+      - "3002:3002"
+    networks:
+      - net1
+
+  vortika:
+    build: .
+    ports:
+      - "3001:3001"
+    networks:
+      - net1
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - importerservice
+      - vortika
+    networks:
+      - net1
+
+networks:
+  net1:
+    driver: bridge
