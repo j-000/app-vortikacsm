@@ -8,7 +8,8 @@ import ForgotPwdPage from '../views/ForgotPwd.vue'
 import FeedsPage from '../views/FeedList.vue'
 import JobsPage from '../views/JobList.vue'
 import PageList from '../views/cms/PageList.vue'
-
+import UsersPage from '../views/UsersPage.vue'
+import SettingsPage from '../views/Settings.vue'
 import LearnCSM from '../views/learn/Main.vue'
 import EditPage from '../views/cms/EditPage.vue'
 import FeedDetailsPage from '../views/FeedDetails.vue'
@@ -53,6 +54,16 @@ const router = createRouter({
       path: '/feeds',
       name: 'feeds',
       component: FeedsPage
+    },
+    {
+      path: '/users',
+      name: 'users',
+      component: UsersPage
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: SettingsPage
     },
     {
       path: '/cms/editor/:templateid',
