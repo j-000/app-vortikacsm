@@ -28,7 +28,7 @@ function AuthRequired(req, res, next) {
             return
           } else {
             // Set decoded user to request to use in view controller.
-            // controllers will have access to user.token, user.orgid and user.permissions (set in contollers.authentication.js)
+            // controllers will have access to user.token, user.orgid (set in contollers.authentication.js)
             req.user = decoded;
             next();
           }
@@ -57,7 +57,7 @@ function AuthRequired(req, res, next) {
 
           // Allow access to route
           next();
-        }
+        } 
       })
     } else {
       // No token in cookie.
