@@ -7,9 +7,11 @@ const { DashboardController } = require('../controllers/dashboard');
 const { JobsController } = require('../controllers/jobs');
 const { MappingController } = require('../controllers/mapping');
 const { PagesController } = require('../controllers/page');
-
-
-
+const { RolesController } = require('../controllers/role');
+const { PermissionsController } = require('../controllers/permissions');
+const { HasPermissions } = require('../middlewares/permissions');
+const { PERMISSIONS } = require('../models/permission');
+const _P = PERMISSIONS;
 /**
  * 
  * /api/register          - Register
@@ -37,18 +39,18 @@ apiRoutes.route('/login')
  */
 
 apiRoutes.route('/feeds')
-  .get(AuthRequired, FeedsController.getAll)
-  .post(AuthRequired, FeedsController.create)
+  .get(AuthRequired, HasPermissions(_P.READ_FEED), FeedsController.getAll)
+  .post(AuthRequired, HasPermissions(_P.CREATE_FEED), FeedsController.create)
 
 apiRoutes.route('/feeds/:feedid')
-  .get(AuthRequired, FeedsController.getById)
-  .delete(AuthRequired, FeedsController.delete)
+  .get(AuthRequired, HasPermissions(_P.READ_FEED), FeedsController.getById)
+  .delete(AuthRequired, HasPermissions(_P.DELETE_FEED), FeedsController.delete)
 
 apiRoutes.route('/feeds/:feedid/source-fields')
-  .get(AuthRequired, JobsController.getSourceFields)
+  .get(AuthRequired, HasPermissions(_P.READ_FEED), JobsController.getSourceFields)
 
 apiRoutes.route('/feeds/:feedid/run-import')
-  .post(AuthRequired, FeedsController.runImport)
+  .post(AuthRequired, HasPermissions(_P.UPDATE_FEED), FeedsController.runImport)
 
 
   
@@ -59,11 +61,11 @@ apiRoutes.route('/feeds/:feedid/run-import')
  * 
  */
 apiRoutes.route('/mappings')
-  .get(AuthRequired, MappingController.getAll)
+  .get(AuthRequired, HasPermissions(_P.UPDATE_FEED), MappingController.getAll)
 
 apiRoutes.route('/mappings/feed/:feedid')
-  .get(AuthRequired, MappingController.getByFeedid)
-  .post(AuthRequired, MappingController.update)
+  .get(AuthRequired, HasPermissions(_P.READ_FEED), MappingController.getByFeedid)
+  .post(AuthRequired, HasPermissions(_P.UPDATE_FEED), MappingController.update)
 
 
 
@@ -104,11 +106,34 @@ apiRoutes.route('/users/:userid')
   .get(AuthRequired, UsersController.getById)
   .delete(AuthRequired, UsersController.delete)
 
+/**
+ * 
+ * /api/roles
+ * 
+ * 
+ */
+apiRoutes.route('/roles')
+  .get(AuthRequired, RolesController.getAll)
+  .post(AuthRequired, RolesController.update)
+
 
 
 /**
  * 
- * /api/cms/pages/list?type= ('all', 'bjdp', 'ajdp', 'srp') - Get pages; Add template
+ * /api/permissions
+ * 
+ * 
+ */
+apiRoutes.route('/permissions')
+  .get(AuthRequired, PermissionsController.getAll)
+
+
+  
+
+
+/**
+ * 
+ * /api/cms/pages/list?status=           - Get pages; Add template
  * /api/cms/pages/:templateid            - Get the template HTML in json response
  * /api/cms/pages/:templateid/preview    - Preview template
  */
