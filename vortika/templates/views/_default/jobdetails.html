@@ -1,0 +1,52 @@
+{% extends "./default.html" %}
+
+{% block head %}
+<!-- Your <link> and <meta> tags here -->
+{% endblock %}
+
+<!-- 
+  Mappings available
+  
+  id (required: true)
+  title (required: true)
+  description (required: true)
+  apply_url (required: true)
+  country (required: true)
+  city (required: true)
+  categories (required: true)
+  latitude (required: false)
+  longitude (required: false)
+  posted_date (required: false)
+  expiry_date (required: false)
+  compensation (required: false)
+  work_setting (required: false)
+  employment_status (required: false)
+  array_one (required: false)
+  array_two (required: false)
+  array_three (required: false)
+-->
+
+{% block content %}
+<div>
+  <h1>{{ title }}</h1>
+  <h5>{{ id }}</h5>
+  <p>{{ city }}, {{ country }}</p>
+  <div class="row">
+    <div class="col">
+      <ul>
+        {% for category in categories %}
+        <li>#{{ category }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col">
+      {{ description | safe }}
+    </div>
+  </div>
+  <a href="{{ apply_url }}">Apply Now</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Your <script> tags here -->
+{% endblock %}
