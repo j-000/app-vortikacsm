@@ -25,7 +25,6 @@ class RolesController {
           newPermissions.forEach(p => {
             if (!allValidPermissions.includes(p)) {
               // set update to false if invalid permissions name sent.
-              console.log(p);
               update = false;
             }
           })
