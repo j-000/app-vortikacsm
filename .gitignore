@@ -1,6 +1,5 @@
 node_modules/
 # Ignore any file starting with "_"
-_* 
+
 .vscode
 *.http
-templates 
