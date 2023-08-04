@@ -1,13 +1,61 @@
 const express = require('express');
 const coreRoutes = express.Router()
-const PageService = require('../database/services/page')
+const { ObjectId } = require('mongodb');
+const JobService = require('../database/services/jobs');
+const PageService = require('../database/services/page');
+const MappingService = require('../database/services/mappings');
 
 // TODO: Create controllers for these routes
+
+// Remember:
+/**
+ * 
+ * _subdomain is one of (preview | public) and 
+ * these are the folders in views/.
+ * views/ has been set as the views folder in nunjucks config
+ *  
+ */
 
 coreRoutes.route('/')
   .get((req, res) => {
     const pagename = 'index.html';
     res.render(`${req._subdomain}/${pagename}`, {});
+  })
+
+
+coreRoutes.route('/jobs/:orgid/:jobid')
+  .get(async (req, res) => {
+    try {
+      const _id = new ObjectId(req.params.jobid);
+      const job = await JobService.getOne({ _id });
+      if(job) {
+        const jobDetailsPage = await PageService.getOne({ orgid: req.params.orgid, fileType: 'job-details' });
+        // check page is published to subdomain
+        if (jobDetailsPage.status == req._subdomain) {
+          if (jobDetailsPage) {
+            const feedid = new ObjectId(job.feedid);
+            const jobMappings = await MappingService.getOne({ feedid });
+            let context = {};
+            // convert the jobs props
+            // to a context object based on the mappings fields.
+            Object.keys(jobMappings.props).forEach(jmp => {
+              // jmp => (id, title, description, apply_url, array_one, etc.)
+              const mappedField = jobMappings.props[jmp].mappedTo.sourceField;
+              context[jmp] = job.props[mappedField]
+            });
+            res.render(`${req._subdomain}/${jobDetailsPage.name}`, { ...context })
+          } else {
+            res.render(`${req._subdomain}/error.html`)
+          }
+        } else {
+          res.render(`${req._subdomain}/error.html`)
+        }
+      } else {
+        res.render(`${req._subdomain}/error.html`)
+      }
+    } catch (error) {
+      res.render(`${req._subdomain}/error.html`);
+    }
   })
 
 
