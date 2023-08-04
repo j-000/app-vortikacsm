@@ -18,11 +18,10 @@ class PagesController {
     } else {
       try {
         if (status == 'live') status = 'public';
-        let filter = { status };
+        let filter = { status, fileType: {$not : {$regex: 'theme'} }};
         const templates = await PageService.getMany(filter, {__v: 0, filepath: 0});
         res.json({ templates });
       } catch (error) {
-        console.log(error);
         res.json({ error });
       } 
     }
@@ -60,7 +59,7 @@ class PagesController {
       })
 
     } catch (error) {
-      res.json({ error });
+      res.json({ error: error.message });
     } 
   }
   
