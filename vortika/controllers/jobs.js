@@ -15,7 +15,6 @@ class JobsController {
       
       res.json({ allJobs, totalPages, currentPage })
     } catch (e) {
-      console.log(e);
       res.json({ error: 'Error getting jobs.' })
     }
   }
