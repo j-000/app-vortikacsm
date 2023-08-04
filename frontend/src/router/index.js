@@ -8,6 +8,7 @@ import ForgotPwdPage from '../views/ForgotPwd.vue'
 import FeedsPage from '../views/FeedList.vue'
 import JobsPage from '../views/JobList.vue'
 import PageList from '../views/cms/PageList.vue'
+import ThemesList from '../views/cms/Themes.vue'
 import UsersPage from '../views/UsersPage.vue'
 import SettingsPage from '../views/Settings.vue'
 import LearnCSM from '../views/learn/Main.vue'
@@ -76,9 +77,14 @@ const router = createRouter({
       component: FeedDetailsPage
     },
     {
-      path: '/pages-list',
+      path: '/pages',
       name: 'pages-list',
       component: PageList
+    },
+    {
+      path: '/themes',
+      name: 'themes-list',
+      component: ThemesList
     },
     {
       path: '/learn',
