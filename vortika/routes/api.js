@@ -11,6 +11,7 @@ const { RolesController } = require('../controllers/role');
 const { PermissionsController } = require('../controllers/permissions');
 const { HasPermissions } = require('../middlewares/permissions');
 const { PERMISSIONS } = require('../models/permission');
+const { ThemesController } = require('../controllers/theme');
 const _P = PERMISSIONS;
 /**
  * 
@@ -99,12 +100,12 @@ apiRoutes.route('/jobs')
  */
 
 apiRoutes.route('/users')
-  .get(AuthRequired, UsersController.getAll)
-  .post(AuthRequired, UsersController.addNewUser)
+  .get(AuthRequired, HasPermissions(_P.READ_USER), UsersController.getAll)
+  .post(AuthRequired, HasPermissions(_P.CREATE_USER), UsersController.addNewUser)
 
 apiRoutes.route('/users/:userid')
-  .get(AuthRequired, UsersController.getById)
-  .delete(AuthRequired, UsersController.delete)
+  .get(AuthRequired, HasPermissions(_P.READ_USER), UsersController.getById)
+  .delete(AuthRequired,HasPermissions(_P.DELETE_USER), UsersController.delete)
 
 /**
  * 
@@ -113,8 +114,8 @@ apiRoutes.route('/users/:userid')
  * 
  */
 apiRoutes.route('/roles')
-  .get(AuthRequired, RolesController.getAll)
-  .post(AuthRequired, RolesController.update)
+  .get(AuthRequired, HasPermissions(_P.READ_ROLE), RolesController.getAll)
+  .post(AuthRequired, HasPermissions(_P.UPDATE_ROLE), RolesController.update)
 
 
 
@@ -128,7 +129,16 @@ apiRoutes.route('/permissions')
   .get(AuthRequired, PermissionsController.getAll)
 
 
-  
+
+
+/**
+ * 
+ * /api/cms/themes
+ * 
+ */
+apiRoutes.route('/cms/themes')
+  .get(AuthRequired,ThemesController.getAll)
+  .post(AuthRequired, ThemesController.create)
 
 
 /**
@@ -139,14 +149,14 @@ apiRoutes.route('/permissions')
  */
 
 apiRoutes.route('/cms/pages/list')
-  .get(AuthRequired, PagesController.getPage)
-  .post(AuthRequired, PagesController.createPage)
+  .get(AuthRequired, HasPermissions(_P.READ_PAGE), PagesController.getPage)
+  .post(AuthRequired, HasPermissions(_P.CREATE_PAGE), PagesController.createPage)
 
   
 apiRoutes.route('/cms/pages/:pageid')
-  .get(AuthRequired, PagesController.getPageHtml)
-  .post(AuthRequired, PagesController.publishPage)
-  .put(AuthRequired, PagesController.updatePageHtml)
+  .get(AuthRequired, HasPermissions(_P.READ_PAGE), PagesController.getPageHtml)
+  .post(AuthRequired, HasPermissions(_P.PUBLISH_PAGE), PagesController.publishPage)
+  .put(AuthRequired, HasPermissions(_P.UPDATE_PAGE), PagesController.updatePageHtml)
 
   
 module.exports = {
