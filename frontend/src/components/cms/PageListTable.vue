@@ -18,7 +18,7 @@
             <i v-if="file.fileLocked" class="fa-solid fa-lock text-danger"></i>
             {{ file.name }}
           </td>
-          <td>{{ file.pageType }}</td>
+          <td>{{ file.fileType }}</td>
           <td>/{{ file.urlslug }}</td>
           <td><span class="text-muted">{{ $moment(file.createdAt).fromNow() }} by {{ file.createdUser  }}</span></td>
           <td>

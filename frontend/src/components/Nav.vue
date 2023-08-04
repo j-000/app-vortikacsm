@@ -30,10 +30,10 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><h6 class="dropdown-header">View</h6></li>
                 <li>
-                  <RouterLink class="align-items-center dropdown-item d-flex justify-content-between" :to="{name: 'pages-list'}">
+                  <RouterLink class="align-items-center dropdown-item d-flex justify-content-between" :to="{name: 'themes-list'}">
                     <div>
                       <i class="fa-regular fa-file-lines me-2"></i>
-                      <span>Pages</span>
+                      <span>Themes & Pages</span>
                     </div>
                   </RouterLink>
                 </li>
