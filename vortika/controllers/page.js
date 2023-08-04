@@ -65,14 +65,13 @@ class PagesController {
   
   static async createPage(req, res){
     const orgid = req.user.orgid;
-    const { status, pageType, urlslug} = req.body;
-    const name = req.body.name + '.html';
+    const status = 'draft';
+    let { fileType, urlslug, name } = req.body;
 
     // validate data
-    const isValidName = /[a-zA-Z\d_]+\.html/gi.test(name);
+    const isValidName = /^[a-zA-Z\d_]+\.html$/gi.test(name);
     const isNameTaken = await PageService.getOne({ name });
-    const isValidSatus = ['draft', 'preview', 'live', 'public'].includes(status);
-    const isValidPageType = ['content', 'template', 'jobdetails', 'searchresults'].includes(pageType);
+    const isValidfileType = ['content', 'homepage', 'job-details', 'search-results'].includes(fileType);
    
     // Hanlde invalid data
     if (isNameTaken) {
@@ -81,37 +80,46 @@ class PagesController {
     if (!isValidName) {
       return res.json({error: 'Only letters (a-z A-Z), numbers (0 - 9) or "_" allowed. Example: about.html'})
     } 
-    if (!isValidSatus){
-      return res.json({error: `"${status}" is not a valid page status.`});
+    if (!isValidfileType){
+      return res.json({error: `"${fileType}" is not a valid page type.`});
     }
-    if (!isValidPageType){
-      return res.json({error: `"${pageType}" is not a valid page type.`});
-    }
-    if (status == 'content'){
-      const isValidSlug = /[a-z\-\d]+/gi.test(urlslug); 
+    if (fileType == 'content'){
+      const isValidSlug = /^[a-z\-\d]+$/gi.test(urlslug); 
       if (!isValidSlug){
         return res.json({error: `"${urlslug}" is not a valid URL slug.`});
       }
+    } else if(fileType == 'homepage'){
+      // Homepage must have name set to index.html. Otherwise view for index page doesn't work.
+      name = 'index.html';
     }
 
-    const filepath = path.join(__dirname, '../templates/', status ,`${name}`);
-    try{
-      // Create TemplateModel doc to keep track of file changes.
-      const user = await UserService.getOne({ _id: new ObjectId(req.user.userid)});
-      const createdUser = user.name;
-      const templateStats = await PageService.create(orgid, filepath, name, status, createdUser, pageType, urlslug);
-    } catch (error) {
-      res.json({error});
-      return;
+    let _templateToCopy = '';
+    if (fileType == "content" || fileType == "homepage"){
+      _templateToCopy = path.join(__dirname, '../templates/views/', '_default', 'index.html');
+    } else if (fileType == "job-details") {
+      _templateToCopy = path.join(__dirname, '../templates/views/', '_default', 'jobdetails.html');
+    } else if (fileType == "search-results") {
+      _templateToCopy = path.join(__dirname, '../templates/views/', '_default', 'searchresults.html');
     }
-    const placeholderHTML = `<h1>VortikaCSM - Your new draft page is ready!</h1>`;
-    fs.writeFile(filepath, placeholderHTML, (err) => {
+
+    const filepath = path.join(__dirname, '../templates/views/', status ,`${name}`);
+    
+    fs.copyFile(_templateToCopy, filepath, async (err) => {
       if (err) {
         res.json({error: 'Error creating file.'})
       } else {
-        res.json({success: true, message: 'File created.'})
+        try{
+          const createdUser = req.user.name;
+          const newPage = await PageService.create({orgid, filepath, name, status, createdUser, fileType, urlslug});
+          res.json({success: true, message: 'File created.'})
+        } catch (error) {
+          res.json({error});
+        }
       }
     });
+
+    // Update the copied file with the name of the theme to ensure the "extends" keyword workds for the templating engine
+
   }
 
   static async updatePageHtml(req, res){
@@ -153,7 +161,7 @@ class PagesController {
 
       if (publish === 'preview') {
         // Move file from drafts to preview folder
-        const newFilePath = path.join(__dirname, '../templates/preview/', fileDoc.name);
+        const newFilePath = path.join(__dirname, '../templates/views/preview/', fileDoc.name);
         fsX.move(fileDoc.filepath, newFilePath, (err) => {
           if (err) {
             return res.json({error: 'Error publishing file.'});
