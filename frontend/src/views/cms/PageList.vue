@@ -11,26 +11,6 @@
       </div>
     </div>
 
-    <ul class="nav nav-tabs">
-      <li @click="activateTab('draft')" class="nav-item">
-        <a class="nav-link active" id="draft" href="#">Draft
-          <span id="grayDot"></span>
-        </a>
-      </li>
-      <li @click="activateTab('preview')" class="nav-item">
-        <a class="nav-link" id="preview" href="#">Preview
-          <span id="orangeDot"></span>
-        </a>
-      </li>
-      <li @click="activateTab('live')" class="nav-item">
-        <a class="nav-link" id="live" href="#">Live
-          <span id="greenDot"></span>
-        </a>
-      </li>
-    </ul>
-
-    <PageListTable v-if="activeTab" :callGetFiles="callGetFiles" :pagetype="activeTab"/>
-
     <div class="modal fade" id="newpagemodal" tabindex="-1" role="dialog" aria-labelledby="newpagemodal" aria-hidden="true" >
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -87,10 +67,8 @@
 import { ref } from 'vue';
 import global from '../../stores/global';
 import toast from '../../functions';
-import PageListTable from '../../components/cms/PageListTable.vue';
 
 export default {
-  components: { PageListTable },
   setup() {
     const store = global();
     const activeTab = ref('draft');
