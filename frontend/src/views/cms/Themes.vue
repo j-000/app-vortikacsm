@@ -11,7 +11,7 @@
 
     <ThemeCard v-for="theme in themes" :theme="theme" :key="theme._id"/>
 
-    <!-- Modal -->
+    <!-- New Theme Modal -->
     <div class="modal fade" id="newThemeModal" tabindex="-1" role="dialog" aria-labelledby="newThemeModal" aria-hidden="true" >
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -87,6 +87,7 @@ export default {
       }
      }
     return {
+      store,
       name,
       themes,
       addNewTheme
