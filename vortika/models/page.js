@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { default: mongoose } = require("mongoose");
 
 const pageSchema = new mongoose.Schema({
@@ -5,9 +6,21 @@ const pageSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'orgid required']
   },
-  pageType: {
+  themeId: {
+    type: ObjectId,
+  },
+  fileType: {
     type: String,
-    required: [true, 'pagetype required']
+    required: [true, 'File type required']
+  },
+  styles: {
+    type: String
+  },
+  javascript: {
+    type: String
+  },
+  pages: {
+    type: [ObjectId]
   },
   urlslug: {
     type: String
