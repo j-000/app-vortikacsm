@@ -1,9 +1,9 @@
 const { PageModel } = require("../../models/page");
 
 
-async function create(orgid, filepath, name, status, createdUser, pageType, urlslug) {
+async function create({orgid, filepath, name, status, createdUser, fileType, urlslug}) {
   try {
-    const result = await PageModel.create({ orgid, filepath, name, status, createdUser, pageType, urlslug});
+    const result = await PageModel.create({ orgid, filepath, name, status, createdUser, fileType, urlslug});
     return result;    
   } catch (error) {
     throw error;
