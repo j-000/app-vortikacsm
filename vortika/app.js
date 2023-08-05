@@ -19,6 +19,9 @@ const { coreRoutes } = require('./routes/core');
 // Create express.js app
 const app = express();
 
+app.set('TEMPLATES_ROOT', path.join(__dirname, 'templates', 'views'));
+app.set('ASSETS_ROOT', path.join(__dirname, 'templates', 'assets'));
+
 // Load environment variables
 require('dotenv').config()
 

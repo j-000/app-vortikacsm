@@ -139,7 +139,7 @@ export default {
     }
 
     const addNewPage = async () => {
-      const response = await fetch('http://localhost:3001/api/cms/pages/list', {
+      const response = await fetch('http://localhost:3001/api/cms/pages', {
         method: 'post', 
         headers: {
           authorization: `Bearer ${store.user.token}`,
