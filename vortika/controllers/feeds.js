@@ -3,11 +3,12 @@ const JobsService = require('../database/services/jobs');
 const FeedService = require('../database/services/feeds');
 const MappingsService = require('../database/services/mappings');
 const { Queue } = require('bullmq');
+const { importJobs } = require('../services/importer');
 
-const jobsQ = new Queue('Imports', { connection : {
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT
-}})
+// const jobsQ = new Queue('Imports', { connection : {
+//   host: process.env.REDIS_HOST,
+//   port: process.env.REDIS_PORT
+// }})
 
 
 class FeedsController {
@@ -63,8 +64,9 @@ class FeedsController {
   }
 
   static async runImport(req, res) {
-    jobsQ.add(`Feed-${req.params.feedid}`, { feedid: req.params.feedid});
-    res.send({success: true})
+    // jobsQ.add(`Feed-${req.params.feedid}`, { feedid: req.params.feedid});
+    importJobs(req.params.feedid, req.user.orgid);
+    res.send({success: true, message: 'Import started.'})
   }
 
 }
