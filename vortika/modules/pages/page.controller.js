@@ -175,11 +175,12 @@ class PagesController {
           return
         }
         
-        fsX.move(fileDoc.filepath, newFilePath, (err) => {
-          if (err) {
-            return res.json({error: 'Error publishing file.'});
-          }
-        })
+        try {
+          fsX.moveSync(fileDoc.filepath, newFilePath)
+        } catch (err) {
+          res.json({error: 'Error publishing file.'});
+          return
+        }
 
         // Update file doc in db
         const updated = await PageService.updateOne({ _id }, {

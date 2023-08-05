@@ -1,6 +1,7 @@
 const JobsService = require('../jobs/job.service');
 const UserService = require('../users/user.service');
 const FeedService = require('../feeds/feed.service');
+const PageService = require('./page.service');
 
 
 class DashboardController {
@@ -14,7 +15,9 @@ class DashboardController {
       const totalFeeds = (await FeedService.getMany({ orgid })).length;
       // Get all jobs for this orgid
       const totalJobs = (await JobsService.getMany({ orgid })).length;
-      res.status(200).json({totalFeeds, totalUsers, totalJobs});
+      // Get all themes count
+      const totalThemes = (await PageService.getMany({ orgid, fileType: 'theme' })).length;
+      res.status(200).json({totalFeeds, totalUsers, totalJobs, totalThemes});
     } catch (error) {
       res.status(500).json({ error });
     }
