@@ -162,7 +162,7 @@ export default {
         };
         const closeFile = async () => {
             saveFile();
-            router.push({ name: 'pages-list' });
+            router.push({ name: 'themes-list' });
         };
         getMappingFields();
         return {
@@ -179,6 +179,9 @@ export default {
 
 <style scoped>
 @import url('https://cdn.jsdelivr.net/npm/ace-builds@1.23.4/css/ace.min.css');
+a {
+  text-decoration: none;
+}
 #editor{
     height: 500px;
     width: 100%;
