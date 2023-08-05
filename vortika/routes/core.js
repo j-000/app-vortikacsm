@@ -29,20 +29,12 @@ coreRoutes.route('/jobs/:orgid/:jobid')
       const _id = new ObjectId(req.params.jobid);
       const job = await JobService.getOne({ _id });
       if(job) {
+        // Assume only 1 page exists for now
         const jobDetailsPage = await PageService.getOne({ orgid: req.params.orgid, fileType: 'job-details' });
-        // check page is published to subdomain
-        if (jobDetailsPage.status == req._subdomain) {
-          if (jobDetailsPage) {
-            const feedid = new ObjectId(job.feedid);
-            const jobMappings = await MappingService.getOne({ feedid });
-            let context = {};
-            // convert the jobs props
-            // to a context object based on the mappings fields.
-            Object.keys(jobMappings.props).forEach(jmp => {
-              // jmp => (id, title, description, apply_url, array_one, etc.)
-              const mappedField = jobMappings.props[jmp].mappedTo.sourceField;
-              context[jmp] = job.props[mappedField]
-            });
+        if (jobDetailsPage) {
+          // check page is published to subdomain
+          if (jobDetailsPage.status == req._subdomain ) {
+            const context = job.props
             res.render(`${req._subdomain}/${jobDetailsPage.name}`, { ...context })
           } else {
             res.render(`${req._subdomain}/error.html`)
