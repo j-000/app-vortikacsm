@@ -1,8 +1,8 @@
 const xml2js = require('xml2js');
-const JobsService = require('../database/services/jobs');
+const JobsService = require('../modules/jobs/job.service');
 const { ObjectId } = require('mongodb');
-const FeedsService = require('../database/services/feeds');
-const MappingService = require('../database/services/mappings');
+const FeedsService = require('../modules/feeds/feed.service');
+const MappingService = require('../modules/mappings/mapping.service');
 
 function findRootNode(key, obj){
   for (const k in obj){

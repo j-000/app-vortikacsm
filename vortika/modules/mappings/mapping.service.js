@@ -1,4 +1,4 @@
-const { MappingsModel } = require("../../models/mappings");
+const { MappingsModel } = require("./mapping.model");
 
 
 

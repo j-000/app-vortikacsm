@@ -1,4 +1,4 @@
-const { FeedModel } = require("../../models/feed");
+const { FeedModel } = require("./feed.model");
 
 
 async function create(name, url, type, firstElementKey, dataType, orgid) {

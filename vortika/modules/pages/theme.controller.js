@@ -1,5 +1,5 @@
 const path = require('path');
-const PageService = require('../database/services/page')
+const PageService = require('../pages/page.service')
 const fs = require('fs');
 
 class ThemesController {

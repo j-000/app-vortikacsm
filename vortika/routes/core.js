@@ -1,9 +1,9 @@
 const express = require('express');
 const coreRoutes = express.Router()
 const { ObjectId } = require('mongodb');
-const JobService = require('../database/services/jobs');
-const PageService = require('../database/services/page');
-const MappingService = require('../database/services/mappings');
+const JobService = require('../modules/jobs/job.service');
+const PageService = require('../modules/pages/page.service');
+const MappingService = require('../modules/mappings/mapping.service');
 
 // TODO: Create controllers for these routes
 

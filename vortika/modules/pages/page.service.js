@@ -1,4 +1,4 @@
-const { PageModel } = require("../../models/page");
+const { PageModel } = require("./page.model");
 
 
 async function create({orgid, filepath, name, status, createdUser, fileType, urlslug}) {

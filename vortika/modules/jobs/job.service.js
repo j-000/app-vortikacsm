@@ -1,4 +1,4 @@
-const { JobModel } = require("../../models/jobs");
+const { JobModel } = require("./job.model");
 
 
 async function create(feedid, orgid, props) {

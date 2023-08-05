@@ -1,4 +1,4 @@
-const { RoleModel } = require("../../models/role");
+const { RoleModel } = require("./role.model");
 
 
 async function getOne(obj, proj) {

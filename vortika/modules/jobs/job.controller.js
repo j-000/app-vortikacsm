@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const JobsService = require('../database/services/jobs');
+const JobsService = require('./job.service');
 
 class JobsController {
 

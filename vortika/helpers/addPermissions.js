@@ -1,5 +1,5 @@
-const { PermissionsModel } = require('../../models/permission');
-const { RoleModel } = require('../../models/role');
+const { PermissionsModel } = require('../modules/permissions/permission.model');
+const { RoleModel } = require('../modules/roles/role.model');
 
 async function addPermissions() {
   const exist = await PermissionsModel.countDocuments();

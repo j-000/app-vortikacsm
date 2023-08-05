@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const MappingsService = require('../database/services/mappings');
+const MappingsService = require('./mapping.service');
 
 class MappingController {
   static async getAll(req, res) {

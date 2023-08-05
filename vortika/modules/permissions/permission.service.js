@@ -1,4 +1,4 @@
-const { PermissionsModel } = require("../../models/permission");
+const { PermissionsModel } = require("./permission.model");
 
 
 async function getAll(obj, proj) {

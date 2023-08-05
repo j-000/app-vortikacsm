@@ -1,5 +1,5 @@
-const RoleService = require('../database/services/role');
-const PermissionService = require('../database/services/permission');
+const RoleService = require('./role.service');
+const PermissionService = require('../permissions/permission.service');
 
 class RolesController {
   static async getAll(req, res) {

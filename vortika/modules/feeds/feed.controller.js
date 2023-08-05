@@ -1,9 +1,9 @@
 const { ObjectId } = require('mongodb');
-const JobsService = require('../database/services/jobs');
-const FeedService = require('../database/services/feeds');
-const MappingsService = require('../database/services/mappings');
+const JobsService = require('../jobs/job.service');
+const FeedService = require('../feeds/feed.service');
+const MappingsService = require('../mappings/mapping.service');
 const { Queue } = require('bullmq');
-const { importJobs } = require('../services/importer');
+const { importJobs } = require('../../services/importer');
 
 // const jobsQ = new Queue('Imports', { connection : {
 //   host: process.env.REDIS_HOST,

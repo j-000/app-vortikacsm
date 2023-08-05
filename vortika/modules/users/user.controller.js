@@ -1,9 +1,9 @@
 const bcrypt = require('bcrypt');
 const { ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
-const { SECRET_KEY } = require('../middlewares/authentication');
-const UserService = require('../database/services/user');
-const RoleServive = require('../database/services/role');
+const { SECRET_KEY } = require('../../middlewares/authentication');
+const UserService = require('./user.service');
+const RoleServive = require('../roles/role.service');
 const passwordValidator = require('password-validator');
 
 

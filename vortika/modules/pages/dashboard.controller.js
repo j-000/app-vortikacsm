@@ -1,6 +1,7 @@
-const JobsService = require('../database/services/jobs');
-const UserService = require('../database/services/user');
-const FeedService = require('../database/services/feeds');
+const JobsService = require('../jobs/job.service');
+const UserService = require('../users/user.service');
+const FeedService = require('../feeds/feed.service');
+
 
 class DashboardController {
   static async info(req, res) {

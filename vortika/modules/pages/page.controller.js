@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const fs = require('fs');
 const fsX = require('fs-extra');
 const path = require('path');
-const PageService = require('../database/services/page');
+const PageService = require('./page.service');
 
 
 

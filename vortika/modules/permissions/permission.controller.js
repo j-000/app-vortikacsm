@@ -1,4 +1,4 @@
-const PermissionsService = require('../database/services/permission');
+const PermissionsService = require('./permission.service');
 
 class PermissionsController {
     static async getAll(req, res){
