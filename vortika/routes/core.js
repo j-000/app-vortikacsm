@@ -3,13 +3,12 @@ const coreRoutes = express.Router()
 const { ObjectId } = require('mongodb');
 const JobService = require('../modules/jobs/job.service');
 const PageService = require('../modules/pages/page.service');
-const MappingService = require('../modules/mappings/mapping.service');
 
 // TODO: Create controllers for these routes
 
 // Remember:
 /**
- * 
+
  * _subdomain is one of (preview | public) and 
  * these are the folders in views/.
  * views/ has been set as the views folder in nunjucks config
@@ -51,13 +50,46 @@ coreRoutes.route('/jobs/:orgid/:jobid')
   })
 
 
-coreRoutes.route('/search-jobs')
+coreRoutes.route('/search-jobs/:orgid')
   .get(async (req, res) => {
     const subdomain = req._subdomain;
-    const context = {
-      jobs: [{name: 'hr recruiter'}]
+    const orgid = req.params.orgid;
+    // Assume only 1 page type search-results exists for now
+    const searchResultsPage = await PageService.getOne({ orgid, fileType: 'search-results' });
+    if(searchResultsPage){
+      // Check it's published for this subdomain
+      if(searchResultsPage.status == subdomain){
+
+        // TODO: Change this to use getManyPaginated()
+        const jobs = await JobService.getMany({ orgid });
+
+        let categoriesSet = new Set();
+        let countriesSet = new Set();
+        let citiesSet = new Set();
+        jobs.forEach(({ props }) => {
+          let { categories, country, city } = props;
+          categories = categories.toString();
+          country = country.toString();
+          city = city.toString();
+
+          if (city == '' || country == '' || categories == '') return
+
+          categoriesSet.add(categories);
+          countriesSet.add(country);
+          citiesSet.add(city);
+        })
+
+        // This won't work. Some jobs from diff feeds can have diff mappings.
+        const filters = {'Category': categoriesSet, 'Country': countriesSet, 'City': citiesSet}
+        console.log(countriesSet);
+        const context = { jobs, filters, orgid }
+        res.render(`${subdomain}/${searchResultsPage.name}`, context);
+      } else {
+        res.render(`${subdomain}/error.html`);
+      }
+    } else {
+      res.render(`${subdomain}/error.html`);
     }
-    res.render(`${subdomain}/search.html`, context)
 })
 
 coreRoutes.route('/:urlslug')
