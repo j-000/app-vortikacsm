@@ -55,11 +55,11 @@ export default {
     const store = global();
 
     const getFiles = async () => {
-      const response = await fetch(`http://localhost:3001/api/cms/pages/list?status=${props.pagetype}`, {
+      const response = await fetch(`http://localhost:3001/api/cms/pages?status=${props.pagetype}`, {
         headers: { authorization: `Bearer ${store.user.token}`}
       });
       const json = await response.json();
-      files.value = json.templates;
+      files.value = json.pages;
     }
     getFiles();
     

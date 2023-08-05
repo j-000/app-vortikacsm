@@ -126,7 +126,8 @@ export default {
     const newPage = ref({
       pageType: '',
       name: '',
-      urlslug: ''
+      urlslug: '',
+      themeId: props.theme._id
     })
     const activateTab = (tab) => {
       activeTab.value = tab;
@@ -147,7 +148,8 @@ export default {
         body: JSON.stringify({
           name: newPage.value.name + '.html',
           fileType: newPage.value.pageType,
-          urlslug: newPage.value.urlslug
+          urlslug: newPage.value.urlslug,
+          themeId: newPage.value.themeId
         })});
       const json = await response.json();
       if (json.success) {
