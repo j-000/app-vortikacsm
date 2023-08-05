@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#"><i class="fas fa-tornado"></i><span class="ms-2">Vortika<sup>CSM</sup></span></a>
+      <div class="navbar-brand" href="#"><i class="fas fa-tornado"></i><span class="ms-2">Vortika<sup>CSM</sup></span></div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -18,7 +18,7 @@
               <RouterLink class="nav-link" :to="{name: 'feeds'}">Feeds</RouterLink>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/admin">Importer Admin</a>
+              <a class="nav-link" href="/admin">Importer</a>
             </li>
             <li class="nav-item">
               <RouterLink class="nav-link" :to="{name: 'jobs'}">Jobs</RouterLink>
@@ -160,6 +160,37 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
+.nav-item {
+  margin: 0 5px;
+  border-bottom: 2px solid #fafbfc;
+}
 
+a {
+  position: relative;
+  color: #000;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #4e73df;
+  cursor: pointer;
+}
+
+a::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #4e73df;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+a:hover::before {
+  transform: scaleX(1);
+}
 </style>
