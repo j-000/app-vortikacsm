@@ -2,7 +2,7 @@
   <div>
     <div class="row mb-4">
       <div class="col d-flex justify-content-between">
-        <h1 class="h3 text-gray-800">Feeds</h1>
+        <h2 class="text-gray-800">Feeds</h2>
         <div>
           <button
             class="btn btn-primary btn-sm"
@@ -82,7 +82,7 @@
                       id="type"
                     >
                       <option selected>Choose...</option>
-                      <option value="sftp">SFTP</option>
+                      <!-- <option value="sftp">SFTP</option> -->
                       <option value="api">API</option>
                     </select>
                   </div>
@@ -117,7 +117,7 @@
                     >
                       <option selected>Choose...</option>
                       <option value="xml">XML</option>
-                      <option value="json">JSON</option>
+                      <!-- <option value="json">JSON</option> -->
                     </select>
                   </div>
                 </div>
