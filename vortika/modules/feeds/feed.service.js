@@ -28,9 +28,9 @@ async function getMany(obj, proj) {
   }
 }
 
-async function update(id, newData) {
+async function update(obj, newData) {
   try {
-    const result = await FeedModel.findByIdAndUpdate(id, newData).exec();
+    const result = await FeedModel.findOneAndUpdate(obj, newData).exec();
     return result
   } catch (error) {
     throw error

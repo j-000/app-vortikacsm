@@ -28,6 +28,9 @@ const feedSchema = new mongoose.Schema({
   dataType: {
     type: String,
     required: [true, 'Data type is required']
+  },
+  sourceFields: {
+    type: [String]
   }
 })
 
