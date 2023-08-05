@@ -1,11 +1,13 @@
 <template>
   <div>
-    <h1 class="mb-2">Imported Jobs</h1>
+    <h2 class="mb-2">Imported Jobs</h2>
     <p class="mb-0">These fields represent a key in the imported data from the ATS.</p>
     <p>These cannot be reference directly in templates. Instead, these must be first mapped to reserved fields within the Vortika<sup>CSM</sup> app.</p>
-    <div class="row my-2">
+    <div class="mt-4">
+      <h3>Available fields</h3>
+    </div>
+    <div class="row">
       <div class="col-lg-3">
-        <h2>Available fields</h2>
         <p>Pages of 25 jobs.</p>
         <form v-if="jobs.length > 0" action="#">
           <div v-for="(prop, index) in allProps" :key="index" class="form-check">
@@ -33,7 +35,8 @@
               </td>
             </tr>
           </tbody>
-          <div class="d-flex justify-content-between">
+        </table>
+        <div class="d-flex justify-content-between">
             <ul class="pagination">
               <li class="page-item">
                 <a @click.prevent="previousPage" class="page-link" href="#">Previous</a>
@@ -44,8 +47,6 @@
             </ul>
             <span class="text-muted">Page {{ currentPage }} of {{ totalPages }}</span>
           </div>
-        </table>
-        
       </div>
     </div>
   </div>
@@ -61,12 +62,13 @@ export default {
     const store = global();
     const jobs = ref([]);
     const allProps = ref([]);
-    const propsToDisplay = ref([]);
+    const propsToDisplay = ref(['id','title', 'apply_url']);
     const currentPage = ref(1);
     const totalPages = ref(1)
 
     const importedJobs = async ({page}) => {
-      const response = await fetch(`http://localhost:3001/api/jobs?page=${page}`, {headers: {authorization: `Bearer ${store.user.token}`}});
+      const response = await fetch(`http://localhost:3001/api/jobs?page=${page}`, 
+      {headers: {authorization: `Bearer ${store.user.token}`}});
       const json = await response.json();
       if (json.error){ 
         toast(json.error);
@@ -74,17 +76,9 @@ export default {
         jobs.value = json.allJobs;
         currentPage.value = json.currentPage;
         totalPages.value = json.totalPages;
-
-        let temp = [];
-        let temp2 = [];
-        json.allJobs.forEach(job => {
-          temp = [ ...temp,  ...Object.keys(job.props)]
-          temp2 = [ ...temp2, job.feedid ]
-        })
-        allProps.value = new Set(temp);
+        allProps.value = new Set(Object.keys(json.allJobs[0].props));
       }
     }
-
     importedJobs({page: 1});
 
     const nextPage = () => {
