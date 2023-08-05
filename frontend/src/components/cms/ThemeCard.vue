@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RouterLink :to="{name: 'themes-list'}" class="card p-3 border-left-primary shadow mb-3">
+    <div class="card p-3 border-left-primary shadow mb-3">
       <div class="card-body py-2">
         <div class="row">
           <div class="col d-flex justify-content-between">
@@ -49,7 +49,7 @@
           </div>
         </div>
       </div>
-   </RouterLink>
+    </div>
 
     <!-- New Page Modal -->
     <div class="modal fade" id="newpagemodal" tabindex="-1" role="dialog" aria-labelledby="newpagemodal" aria-hidden="true" >
@@ -176,5 +176,6 @@ export default {
 <style scoped>
 a {
   text-decoration: none;
+  /* cursor: unset; */
 }
 </style>

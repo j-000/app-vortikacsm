@@ -87,23 +87,22 @@ import toast from '../functions';
 
 export default {
   props: {
-    feedid: String,
+    feedObj: Object,
   },
   setup(props) {
     const mappingFields = ref({});
-    const sourceFields = ref({});
+    const sourceFields = ref(props.feedObj.sourceFields);
     const store = global();
     const newMappings = ref({});
-
-    const getMappings = async () => {
+    
+    const getFeedMappings = async () => {
       const response = await fetch(
-        `http://localhost:3001/api/mappings/feed/${props.feedid}`,
+        `http://localhost:3001/api/mappings/feed/${props.feedObj._id}`,
         { headers: { authorization: `Bearer ${store.user.token}` } }
       );
       const json = await response.json();
       if (json.success) {
         mappingFields.value = json.mappings.props;
-
         // Add placeholders for newMappings
         Object.keys(json.mappings.props).forEach(k => {
           newMappings.value[k] = json.mappings.props[k];
@@ -112,26 +111,10 @@ export default {
         toast(json.error);
       }
     };
-    getMappings();
-
-    const getSource = async () => {
-      const response = await fetch(
-        `http://localhost:3001/api/feeds/${props.feedid}/source-fields`,
-        { headers: { authorization: `Bearer ${store.user.token}` } }
-      );
-      const json = await response.json();
-      if (json.success) {
-        sourceFields.value = json.props;
-      } else {
-        toast(json.error);
-      }
-    };
-    getSource();
-
-
+    getFeedMappings();
 
     const saveNewMappings = async () => {
-      const response = await fetch(`http://localhost:3001/api/mappings/feed/${props.feedid}`, {
+      const response = await fetch(`http://localhost:3001/api/mappings/feed/${props.feedObj._id}`, {
         method: 'post',
         headers: {
           authorization: `Bearer ${store.user.token}`,
@@ -142,11 +125,10 @@ export default {
       const json = await response.json();
       if (json.success) {
         toast('Success! Mappings updated.');
-        getMappings();
+        getFeedMappings();
       } else {
         toast(json.error);
       }
-      console.log(json);
     }
 
 
