@@ -6,8 +6,6 @@ const PageService = require('./page.service');
 
 
 
-
-
 class PagesController {
 
   static async getPages(req, res){
@@ -96,15 +94,16 @@ class PagesController {
       name = 'index.html';
     }
 
+    const TEMPLATES_ROOT = req.app.get('TEMPLATES_ROOT');
     let _templateToCopy = '';
     if (fileType == "content" || fileType == "homepage"){
-      _templateToCopy = path.join(__dirname, '../templates/views/', '_default', 'index.html');
+      _templateToCopy = path.join(TEMPLATES_ROOT, '_default', 'index.html');
     } else if (fileType == "job-details") {
-      _templateToCopy = path.join(__dirname, '../templates/views/', '_default', 'jobdetails.html');
+      _templateToCopy = path.join(TEMPLATES_ROOT, '_default', 'jobdetails.html');
     } else if (fileType == "search-results") {
-      _templateToCopy = path.join(__dirname, '../templates/views/', '_default', 'searchresults.html');
+      _templateToCopy = path.join(TEMPLATES_ROOT, '_default', 'searchresults.html');
     }
-    const filepath = path.join(__dirname, '../templates/views/', status ,`${name}`);
+    const filepath = path.join(TEMPLATES_ROOT, status ,`${name}`);
     const _id = new ObjectId(themeId);
     const theme = await PageService.getOne({ _id });
 
@@ -159,6 +158,7 @@ class PagesController {
 
   static async publishPage(req, res){
     const orgid = req.user.orgid;
+    const TEMPLATES_ROOT = req.app.get('TEMPLATES_ROOT');
 
     try {
       const publish = req.body.publish;
@@ -167,7 +167,8 @@ class PagesController {
 
       if (publish === 'preview') {
         // Move file from drafts to preview folder
-        const newFilePath = path.join(__dirname, '../templates/views/preview/', fileDoc.name);
+
+        const newFilePath = path.join(TEMPLATES_ROOT, '/preview/', fileDoc.name);
         
         if (fileDoc.filepath === newFilePath) {
           res.json({error: 'This file is already published to preview. If you made changes, simply press "save".'});

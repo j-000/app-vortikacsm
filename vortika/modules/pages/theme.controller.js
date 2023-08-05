@@ -25,11 +25,14 @@ class ThemesController {
         if (exists) {
           res.json({error: 'Theme already exists with this name.'});
         } else {
-          const defaultThemePath = path.resolve(__dirname, '../templates/views/_default/theme.html');
-          const draftsPath = path.resolve(__dirname, `../templates/views/draft/${name}`)
+
+          const TEMPLATES_ROOT = req.app.get('TEMPLATES_ROOT');
+          const defaultThemePath = path.join(TEMPLATES_ROOT, '_default', '/theme.html');
+          const draftsPath = path.join(TEMPLATES_ROOT, `/draft/${name}`);
           
           fs.copyFile(defaultThemePath, draftsPath, async (err) => {
             if (err) {
+              console.log(err);
               res.json({ error: 'Error creating theme.'})
             } else {
               const newTheme = await PageService.create({orgid, filepath: draftsPath, name, status, createdUser: createdBy, fileType});
