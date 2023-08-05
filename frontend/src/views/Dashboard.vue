@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-      <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+      <h2 class="mb-0 text-gray-800">Dashboard</h2>
     </div>
     <div class="row">
       <div class="col-xl-3 col-md-6 mb-4">
@@ -71,7 +71,10 @@
               <div class="col mr-2">
                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Themes</div>
                 <div class="h5 mb-0 font-weight-bold text-gray-800" id="themesCount">
-                  <span>1</span>
+                  <span v-if="totalThemes !== false">{{ totalThemes }}</span>
+                  <div v-else class="spinner-border text-secondary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
                 </div>
               </div>
               <div class="col-auto">
@@ -96,6 +99,7 @@ export default {
     const totalFeeds = ref(false);
     const totalJobs = ref(false);
     const totalUsers = ref(false);
+    const totalThemes = ref(false);
 
     const dbinfo = async () => {
       try {
@@ -108,6 +112,7 @@ export default {
           totalFeeds.value = json.totalFeeds;
           totalJobs.value = json.totalJobs;
           totalUsers.value = json.totalUsers;
+          totalThemes.value = json.totalThemes;
         }
       } catch (error) {
         toast(error);
@@ -120,7 +125,8 @@ export default {
     return {
       totalFeeds,
       totalJobs,
-      totalUsers
+      totalUsers,
+      totalThemes
     }
   }
 }
