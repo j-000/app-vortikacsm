@@ -20,14 +20,16 @@ const jobsQ = new Queue('Imports', { connection : {
 }})
 // Create an Adapter 
 const serverAdapter = new ExpressAdapter();
-serverAdapter.setBasePath('/admin');
+serverAdapter.setBasePath('/admin'); 
 // Configure UI Dashboard
 createBullBoard({
   queues: [new BullMQAdapter(jobsQ)],
   serverAdapter: serverAdapter,
 });
 // Configure routes for dashboard
+// this is where the dashboard will be shown.
 app.use('/admin', serverAdapter.getRouter());
+
 // Setup worker
 const worker = new Worker('Imports', async job => {
     for(let i = 0; i < 100; i++){
