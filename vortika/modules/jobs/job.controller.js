@@ -19,6 +19,22 @@ class JobsController {
     }
   }
 
+  static async getAllByFeedId(req, res){
+    const currentPage = parseInt(req.query.page) || 1;
+    const pageSize = 25;
+    const skip = (currentPage - 1) * pageSize;
+    const orgid = req.user.orgid;
+    const feedid = new ObjectId(req.params.feedid);
+    try {
+      const totalJobs = (await JobsService.getMany({ orgid, feedid })).length;
+      const totalPages = Math.ceil(totalJobs / pageSize);
+      const allJobs = await JobsService.getManyPaginated({ orgid, feedid }, {}, skip, pageSize);
+      res.json({ allJobs, totalPages, currentPage })
+    } catch (e) {
+      res.json({ error: 'Error getting jobs.' })
+    }
+  }
+
   static async getSourceFields(req, res){
     const orgid = req.user.orgid;
     const feedid = new ObjectId(req.params.feedid);

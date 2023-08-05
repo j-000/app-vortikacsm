@@ -7,10 +7,14 @@ const { PERMISSIONS } = require('../permissions/permission.model');
 const _P = PERMISSIONS;
 
 /**
- * /api/jobs?page= - Get all jobs for orgid of user logged in
+ * /api/jobs?page=       - Get all jobs for orgid of user logged in
  */
 jobViews.route('/jobs')
-  .get(AuthRequired, JobsController.getAll);
+  .get(AuthRequired, JobsController.getAll)
+  
+
+jobViews.route('/jobs/feed/:feedid')
+  .get(AuthRequired, JobsController.getAllByFeedId)
 
 
 jobViews.route('/feeds/:feedid/source-fields')
