@@ -10,6 +10,7 @@ const jobSchema = new mongoose.Schema({
     type: Number, 
     required: true
   },
+  // This is going to be the context object used in the templates.
   props: {
     type: Object
   }
