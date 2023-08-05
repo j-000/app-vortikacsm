@@ -3,11 +3,14 @@ const fs = require('fs');
 const fsX = require('fs-extra');
 const path = require('path');
 const PageService = require('../database/services/page');
-const UserService = require('../database/services/user');
+
+
+
+
 
 class PagesController {
 
-  static async getPage(req, res){
+  static async getPages(req, res){
     const orgid = req.user.orgid;
     
     let status = req.query.status.toLowerCase(); 
@@ -19,8 +22,8 @@ class PagesController {
       try {
         if (status == 'live') status = 'public';
         let filter = { status, fileType: {$not : {$regex: 'theme'} }};
-        const templates = await PageService.getMany(filter, {__v: 0, filepath: 0});
-        res.json({ templates });
+        const pages = await PageService.getMany(filter, {__v: 0, filepath: 0});
+        res.json({ pages });
       } catch (error) {
         res.json({ error });
       } 
@@ -66,7 +69,7 @@ class PagesController {
   static async createPage(req, res){
     const orgid = req.user.orgid;
     const status = 'draft';
-    let { fileType, urlslug, name } = req.body;
+    let { fileType, urlslug, name, themeId } = req.body;
 
     // validate data
     const isValidName = /^[a-zA-Z\d_]+\.html$/gi.test(name);
@@ -101,24 +104,27 @@ class PagesController {
     } else if (fileType == "search-results") {
       _templateToCopy = path.join(__dirname, '../templates/views/', '_default', 'searchresults.html');
     }
-
     const filepath = path.join(__dirname, '../templates/views/', status ,`${name}`);
-    
-    fs.copyFile(_templateToCopy, filepath, async (err) => {
-      if (err) {
-        res.json({error: 'Error creating file.'})
-      } else {
-        try{
-          const createdUser = req.user.name;
-          const newPage = await PageService.create({orgid, filepath, name, status, createdUser, fileType, urlslug});
-          res.json({success: true, message: 'File created.'})
-        } catch (error) {
-          res.json({error});
-        }
-      }
-    });
+    const _id = new ObjectId(themeId);
+    const theme = await PageService.getOne({ _id });
 
-    // Update the copied file with the name of the theme to ensure the "extends" keyword workds for the templating engine
+    try {
+      fs.copyFileSync(_templateToCopy, filepath);
+      const createdUser = req.user.name;
+      const newPage = await PageService.create({orgid, filepath, name, status, createdUser, fileType, urlslug});
+    } catch (error){
+      res.json({error: 'Error creating page.'})
+    }
+
+    try {
+      const contents = fs.readFileSync(filepath, 'utf-8');
+      const updatedContent = contents.replace("theme.html", theme.name);
+      fs.writeFileSync(filepath, updatedContent, 'utf-8');
+    } catch (error) {
+      res.json({error: 'Error updating reference to "extends".'})
+    }
+
+    res.json({success: true, message: 'Page created.'});
 
   }
 
@@ -162,16 +168,23 @@ class PagesController {
       if (publish === 'preview') {
         // Move file from drafts to preview folder
         const newFilePath = path.join(__dirname, '../templates/views/preview/', fileDoc.name);
+        
+        if (fileDoc.filepath === newFilePath) {
+          res.json({error: 'This file is already published to preview. If you made changes, simply press "save".'});
+          return
+        }
+        
         fsX.move(fileDoc.filepath, newFilePath, (err) => {
           if (err) {
             return res.json({error: 'Error publishing file.'});
           }
         })
+
         // Update file doc in db
         const updated = await PageService.updateOne({ _id }, {
           filepath: newFilePath, status: publish, lastPublished: { timestamp : Date.now(), to: publish, byUser: req.user.name }
         })
-        return res.json({success: true, message: 'File published successfully to preview.'})
+        return res.json({success: true, message: 'File published successfully to preview.'});
       } else if (publish === 'live') {
         // more convoluted as needed to have 2 versions.
 
