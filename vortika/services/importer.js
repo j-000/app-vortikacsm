@@ -19,6 +19,19 @@ function findRootNode(key, obj){
   return undefined
 }
 
+
+async function httpRequest(url) {
+  try {
+    const data = await fetch(url);
+    const text = await data.text();
+    const json = await xml2js.parseStringPromise(text);
+    return json
+  } catch (error) {
+    throw error
+  }
+}
+
+
 function apiXml(feed, orgid){
 
   console.log(`Starting import for: feed-${feed._id} (${feed.url}) orgid-${orgid}`);
@@ -88,9 +101,22 @@ function sftpJson(){}
 async function importJobs(feedid, orgid){
   const _id = new ObjectId(feedid);
   const feed = await FeedsService.getOne({ _id });
-  if (feed.type == 'api' && feed.dataType == 'xml') {
-    apiXml(feed, orgid);
-  }
+  // Check if source fields has been added to the feed.
+  if (feed.sourceFields.length > 0) {
+    if (feed.type == 'api' && feed.dataType == 'xml') {
+      apiXml(feed, orgid);
+    }
+  } else {
+    // Get source fields first. Don't run import until mappings complete.
+    try {
+      const json = await httpRequest(feed.url);
+      const jobs = findRootNode(feed.firstElementKey, json);
+      const jobFields = Object.keys(jobs[0]);
+      await FeedsService.update({ _id: feed._id }, { sourceFields: jobFields });
+    } catch (error) {
+      console.log(error);
+    }
+  } 
 }
 
 
