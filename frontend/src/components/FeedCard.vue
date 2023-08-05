@@ -32,7 +32,6 @@
       <div class="row no-gutters align-items-center">
         <div class="col mr-2 d-flex justify-content-around">
           <span><i class="fas fa-briefcase"></i> {{feedData.totalFeedJobs}} Jobs</span> 
-          <span class="text-success"><i class="fas fa-triangle-exclamation"></i> 0 Failures</span> 
           <small class="text-muted"><i class="fas fa-file-import"></i> Last import {{$moment(feedData.lastImport).fromNow()}}</small>
         </div>
       </div>
