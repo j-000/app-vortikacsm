@@ -133,7 +133,7 @@ apiRoutes.route('/permissions')
 
 /**
  * 
- * /api/cms/themes
+ * /api/cms/themes     - Get themes; Add theme;
  * 
  */
 apiRoutes.route('/cms/themes')
@@ -143,13 +143,13 @@ apiRoutes.route('/cms/themes')
 
 /**
  * 
- * /api/cms/pages/list?status=           - Get pages; Add template
- * /api/cms/pages/:templateid            - Get the template HTML in json response
- * /api/cms/pages/:templateid/preview    - Preview template
+ * /api/cms/pages?status=       - Get pages; Add pages;
+ * /api/cms/pages/:pageid       - Get the page HTML; Publish page; UpdatePageHtml;
+ * 
  */
 
-apiRoutes.route('/cms/pages/list')
-  .get(AuthRequired, HasPermissions(_P.READ_PAGE), PagesController.getPage)
+apiRoutes.route('/cms/pages')
+  .get(AuthRequired, HasPermissions(_P.READ_PAGE), PagesController.getPages)
   .post(AuthRequired, HasPermissions(_P.CREATE_PAGE), PagesController.createPage)
 
   
