@@ -10,6 +10,15 @@ async function create(feedid, orgid, props) {
   }
 }
 
+async function createMany(array) {
+  try {
+    const result = await JobModel.create(array);
+    return result;    
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getOne(obj, proj) {
   try {
     const result = await JobModel.findOne(obj, proj).exec();
@@ -67,6 +76,7 @@ async function removeMany(obj) {
 
 module.exports = {
   create,
+  createMany,
   getMany,
   getManyPaginated,
   getOne,

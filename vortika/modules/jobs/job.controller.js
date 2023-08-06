@@ -35,6 +35,17 @@ class JobsController {
     }
   }
 
+  static async addJobs(req, res) {
+    try {
+      const { orgid, feedid, props} = req.body.jobObj;
+      const job = { orgid, props, feedid: new ObjectId(feedid)}      
+      const feedJob = await JobsService.createMany([job]);
+    } catch(error) {
+      console.log(error);
+      res.status(500).json({error: error.message});
+    }
+  }
+
   static async getSourceFields(req, res){
     const orgid = req.user.orgid;
     const feedid = new ObjectId(req.params.feedid);
@@ -45,6 +56,16 @@ class JobsController {
       } else {
         res.json({success: true, props: [], message: 'No jobs have been imported.'});
       }
+    } catch(error) {
+      res.status(500).json({error: error.message});
+    }
+  }
+
+  static async deleteByFeedId(req, res) {
+    const feedid = new ObjectId(req.params.feedid);
+    try {
+      const feedJob = await JobsService.removeMany({ feedid });
+      res.json({success: true});
     } catch(error) {
       res.status(500).json({error: error.message});
     }

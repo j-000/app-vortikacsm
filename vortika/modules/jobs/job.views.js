@@ -11,12 +11,15 @@ const _P = PERMISSIONS;
  */
 jobViews.route('/jobs')
   .get(AuthRequired, JobsController.getAll)
+  .post(AuthRequired, JobsController.addJobs)
   
 
 jobViews.route('/jobs/feed/:feedid')
   .get(AuthRequired, JobsController.getAllByFeedId)
+  .delete(AuthRequired, JobsController.deleteByFeedId)
 
 
+// TODO: Rename this route to /jobs/source-fields/feed/:feedid/
 jobViews.route('/feeds/:feedid/source-fields')
   .get(AuthRequired, HasPermissions(_P.READ_FEED), JobsController.getSourceFields);
 
