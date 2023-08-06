@@ -78,8 +78,8 @@
 <script>
 import { RouterLink } from 'vue-router';
 import { ref } from 'vue';
-import toast from '../functions.js';
-import globalStore from '../stores/global';
+import toast from '../../functions.js';
+import globalStore from '../../stores/global';
 import { useRouter } from 'vue-router';
 
 
@@ -96,17 +96,10 @@ export default {
 
     const login = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/login',{ 
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+        const json = await Api.login({
               email: email.value,
               password: password.value
-            })
-        });
-        const json = await response.json();
+            });
         if(json.success){
           store.updateUser({...json.user, token: json.token});
           store.updateDomains(json.domains);

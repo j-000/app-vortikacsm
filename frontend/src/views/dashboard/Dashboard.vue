@@ -89,13 +89,12 @@
 </template>
 
 <script>
-import globalStore from '../stores/global';
-import toast from '../functions.js';
+import toast from '../../functions.js';
 import { ref } from 'vue';
+import Api from '../../services/Api';
 
 export default {
   setup(){
-    const store = globalStore();
     const totalFeeds = ref(false);
     const totalJobs = ref(false);
     const totalUsers = ref(false);
@@ -103,9 +102,7 @@ export default {
 
     const dbinfo = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/dashboard-info', 
-          { headers: { authorization: `Bearer ${store.user.token}` } });
-        const json = await response.json();
+        const json = await Api.getDashboardInfo();
         if (json.error) {
           toast(json.error);
         } else {

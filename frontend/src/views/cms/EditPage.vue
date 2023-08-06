@@ -7,11 +7,10 @@
 </template>
 
 <script>
-import CodeEditorVue from "../../components/CodeEditor.vue";
-import global from "../../stores/global";
+import CodeEditorVue from "../../components/cms/CodeEditor.vue";
 import toast from '../../functions';
 import { useRoute } from 'vue-router';
-import { ref } from "vue";
+import Api from '../../services/Api';
 
 
 export default {
@@ -19,18 +18,11 @@ export default {
     CodeEditorVue,
   },
   setup() {
-    
-    const store = global();
     const router = useRoute();
 
     const publishToPreview = async () => {
       if (confirm('Publish page to preview?')){
-        const response = await fetch(`http://localhost:3001/api/cms/pages/${router.params.templateid}`, {
-          method: 'post',
-          headers: { authorization: `Bearer ${store.user.token}`, 'Content-Type': 'application/json'},
-          body: JSON.stringify({ publish: 'preview' })
-        });
-        const json = await response.json();
+        const json = await Api.publishPage(router.params.templateid, { publish: 'preview' });
         if (json.error){
           toast(json.error);
         } else {

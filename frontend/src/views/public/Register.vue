@@ -82,9 +82,9 @@
 
 <script>
 import { ref } from "vue";
-import global from '../stores/global';
-import toast from '../functions';
-import router from "../router";
+import global from '../../stores/global';
+import toast from '../../functions';
+import router from "../../router";
 
 export default {
   setup() {
@@ -97,13 +97,7 @@ export default {
     });
 
     const register = async () => {
-      console.log(userData.value);
-      const response = await fetch(`http://localhost:3001/api/register`, { 
-        method: 'post', 
-        body: JSON.stringify(userData.value),
-        headers: { authorization: `Bearer ${store.user.token}`, 'Content-Type': 'application/json'} });
-
-      const json = await response.json();
+      const json = await Api.register(userData.value);
       if(json.success) {
         toast('Success! Redirecting you to login...');
         setTimeout(() => { router.push('/login') }, 1500);

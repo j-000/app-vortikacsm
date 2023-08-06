@@ -39,9 +39,10 @@
 
 <script>
 import { ref } from 'vue';
-import global from '../stores/global';
-import toast from '../functions';
+import global from '../../stores/global';
+import toast from '../../functions';
 import { useRouter } from 'vue-router';
+import Api from '../../services/Api';
 
 export default {
   setup() {
@@ -52,10 +53,7 @@ export default {
     const route = useRouter();
 
     const getRoles = async () => {
-      const response = await fetch(`http://localhost:3001/api/roles`, {
-        headers: {authorization: `Bearer ${store.user.token}`}
-      });
-      const json = await response.json();     
+      const json = await Api.getRoles();     
       roles.value = json.roles;
       
       json.roles.forEach(r => {
@@ -65,10 +63,7 @@ export default {
     getRoles();
 
     const getPermissions = async () => {
-      const response = await fetch(`http://localhost:3001/api/permissions`, {
-        headers: {authorization: `Bearer ${store.user.token}`}
-      });
-      const json = await response.json();
+      const json = await Api.gerPermissions();
       permissions.value = json.permissions;
     }
     getPermissions();
@@ -85,12 +80,7 @@ export default {
     } 
 
     const savePermissions = async () => {
-      const response = await fetch(`http://localhost:3001/api/roles`, {
-        method: 'post',
-        headers: {authorization: `Bearer ${store.user.token}`, 'Content-Type': 'application/json'},
-        body: JSON.stringify(newPermissions.value)
-      })
-      const json = await response.json();
+      const json = await Api.updateRolePermissions(newPermissions.value);
       if(json.success){
         toast(json.message);
         getPermissions();

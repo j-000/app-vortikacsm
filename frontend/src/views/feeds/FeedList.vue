@@ -143,10 +143,11 @@
 </template>
 
 <script>
-import global from "../stores/global";
+import global from "../../stores/global";
 import { ref } from "vue";
-import FeedCard from "../components/FeedCard.vue";
-import toast from "../functions";
+import FeedCard from "../../components/FeedCard.vue";
+import toast from "../../functions";
+import Api from "../../services/Api";
 
 export default {
   components: {
@@ -163,34 +164,23 @@ export default {
     });
     const store = global();
 
-    const feedsData = async () => {
-      const response = await fetch("http://localhost:3001/api/feeds", {
-        headers: { authorization: `Bearer ${store.user.token}` },
-      });
-      const json = await response.json();
+    const getFeeds = async () => {
+      const json = await Api.getFeeds();
       feeds.value = json.feeds;
-    };
+    }
 
     const addNewFeed = async () => {
-      const response = await fetch(`http://localhost:3001/api/feeds`, {
-        method: "post",
-        body: JSON.stringify(newFeedData.value),
-        headers: {
-          authorization: `Bearer ${store.user.token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const json = await response.json();
+      const json = await Api.addNewFeed(newFeedData.value);
       if (json.success) {
         document.querySelector("#newFeedCloseButton").click();
         toast("Success! Feed created.");
-        feedsData();
+        getFeeds();
       } else {
         toast(json.error);
       }
     };
 
-    feedsData();
+    getFeeds();
 
     return {
       newFeedData,

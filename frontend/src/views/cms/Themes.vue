@@ -48,6 +48,7 @@ import { ref } from 'vue';
 import global from '../../stores/global';
 import toast from '../../functions';
 import ThemeCard from '../../components/cms/ThemeCard.vue';
+import Api from '../../services/Api';
 
 export default {
   components: {
@@ -59,10 +60,7 @@ export default {
     const themes = ref();
 
     const getThemes = async () => {
-      const response = await fetch(`http://localhost:3001/api/cms/themes`, {
-        headers: { authorization: `Bearer ${store.user.token}`},
-      });
-      const json = await response.json();
+      const json = await Api.getThemes();
       if (json.success) {
         themes.value = json.themes;
       } else {
@@ -72,12 +70,7 @@ export default {
     getThemes();
 
     const addNewTheme = async () => { 
-      const response = await fetch(`http://localhost:3001/api/cms/themes`, {
-        method: 'post',
-        headers: { authorization: `Bearer ${store.user.token}`, 'Content-Type': 'application/json'},
-        body: JSON.stringify({name: name.value + '.html'})
-      });
-      const json = await response.json();
+      const json = await Api.addNewTheme({name: name.value + '.html'});
       if (json.success) {
         toast(json.message);
         document.querySelector('#newThemeModalCloseBtn').click();

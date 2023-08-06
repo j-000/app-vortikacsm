@@ -90,8 +90,9 @@
 
 <script>
 import { ref } from 'vue';
-import global from '../stores/global';
-import toast from '../functions';
+import global from '../../stores/global';
+import toast from '../../functions';
+import Api from '../../services/Api';
 
 export default {
   setup() {
@@ -107,12 +108,7 @@ export default {
     });
 
     const addNewUser = async () => {
-      const response = await fetch(`http://localhost:3001/api/users`, {
-        method: 'post',
-        headers: {authorization: `Bearer ${store.user.token}`, 'Content-Type': 'application/json'},
-        body: JSON.stringify(newUserData.value)
-      });
-      const json = await response.json();
+      const json = await Api.addUser(newUserData.value);
       if (json.success) {
         toast(json.message);
         document.querySelector('#closeModalBtn').click();
@@ -123,21 +119,16 @@ export default {
     }
 
     const getRoles = async () => {
-      const response = await fetch(`http://localhost:3001/api/roles`, {
-        headers: {authorization: `Bearer ${store.user.token}`}
-      });
-      const json = await response.json();     
+      const json = await Api.getRoles();     
       roles.value = json.roles;
     }
     getRoles();
 
     const getUsers = async () => {
-      const response = await fetch(`http://localhost:3001/api/users`, {
-        headers: {authorization: `Bearer ${store.user.token}`}
-      });
-      const json = await response.json();
+      const json = await Api.getUsers();
       users.value = json.users;
     };
+    
     getUsers();
     return {
       users,

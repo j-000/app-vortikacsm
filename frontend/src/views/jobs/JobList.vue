@@ -53,9 +53,10 @@
 </template>
 
 <script>
-import global from '../stores/global';
-import toast from '../functions';
+import global from '../../stores/global';
+import toast from '../../functions';
 import { ref } from 'vue';
+import Api from '../../services/Api';
 
 export default {
   setup(){
@@ -67,9 +68,7 @@ export default {
     const totalPages = ref(1)
 
     const importedJobs = async ({page}) => {
-      const response = await fetch(`http://localhost:3001/api/jobs?page=${page}`, 
-      {headers: {authorization: `Bearer ${store.user.token}`}});
-      const json = await response.json();
+      const json = await Api.getJobs(page);
       if (json.error){ 
         toast(json.error);
       } else {
