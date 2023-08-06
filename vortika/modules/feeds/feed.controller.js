@@ -3,12 +3,12 @@ const JobsService = require('../jobs/job.service');
 const FeedService = require('../feeds/feed.service');
 const MappingsService = require('../mappings/mapping.service');
 const { Queue } = require('bullmq');
-const { importJobs } = require('../../services/importer');
 
-// const jobsQ = new Queue('Imports', { connection : {
-//   host: process.env.REDIS_HOST,
-//   port: process.env.REDIS_PORT
-// }})
+
+const jobsQ = new Queue('Imports', { connection : {
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT
+}})
 
 
 class FeedsController {
@@ -49,7 +49,29 @@ class FeedsController {
   }
   
   static async update(req, res){
-    // TODO: implement this
+    const orgid = req.user.org;
+    const feedid = new ObjectId(req.params.feedid);
+    const {newCron, sourceFields, lastImport} = req.body;
+    const obj = {};
+    if (newCron){
+      obj.cron = newCron
+    }
+    if (sourceFields){
+      obj.sourceFields = sourceFields
+    }
+    if (lastImport) {
+      obj.lastImport = lastImport
+    }
+    if (Object.keys(obj).length == 0) {
+      res.json({error: 'Nothing to udpate.'});
+      return
+    }
+    try {
+      await FeedService.update({ _id: feedid}, obj);
+      res.json({success: 'Feed udpated.'});
+    } catch(error){ 
+      res.json({error: 'Error updating the feed.'})
+    }
   }
 
   static async delete(req, res){
@@ -64,8 +86,7 @@ class FeedsController {
   }
 
   static async runImport(req, res) {
-    // jobsQ.add(`Feed-${req.params.feedid}`, { feedid: req.params.feedid});
-    importJobs(req.params.feedid, req.user.orgid);
+    jobsQ.add(`Feed-${req.params.feedid}`, { feedid: req.params.feedid, orgid: req.user.orgid});
     res.send({success: true, message: 'Import started.'})
   }
 

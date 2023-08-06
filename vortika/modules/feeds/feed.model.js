@@ -31,6 +31,12 @@ const feedSchema = new mongoose.Schema({
   },
   sourceFields: {
     type: [String]
+  },
+  cron: {
+    type: String
+  },
+  repeatableJobId: {
+    type: String
   }
 })
 

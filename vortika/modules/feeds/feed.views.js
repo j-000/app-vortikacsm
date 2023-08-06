@@ -21,11 +21,11 @@ feedViews.route('/feeds')
 
 feedViews.route('/feeds/:feedid')
   .get(AuthRequired, HasPermissions(_P.READ_FEED), FeedsController.getById)
+  .post(AuthRequired, HasPermissions(_P.UPDATE_FEED), FeedsController.update)
   .delete(AuthRequired, HasPermissions(_P.DELETE_FEED), FeedsController.delete)
 
 feedViews.route('/feeds/:feedid/run-import')
   .post(AuthRequired, HasPermissions(_P.UPDATE_FEED), FeedsController.runImport)
-
   
 module.exports = {
     feedViews
