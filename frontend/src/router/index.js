@@ -1,20 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import HomePage from '../views/Home.vue'
-import RegisterPage from '../views/Register.vue'
-import LoginPage from '../views/Login.vue'
-import DashboardPage from '../views/Dashboard.vue'
-import ForgotPwdPage from '../views/ForgotPwd.vue'
-import FeedsPage from '../views/FeedList.vue'
-import JobsPage from '../views/JobList.vue'
-import PageList from '../views/cms/PageList.vue'
+import HomePage from '../views/public/Home.vue'
+import RegisterPage from '../views/public/Register.vue'
+import LoginPage from '../views/public/Login.vue'
+import DashboardPage from '../views/dashboard/Dashboard.vue'
+import ForgotPwdPage from '../views/public/ForgotPwd.vue'
+import FeedsPage from '../views/feeds/FeedList.vue'
+import JobsPage from '../views/jobs/JobList.vue'
 import ThemesList from '../views/cms/Themes.vue'
-import UsersPage from '../views/UsersPage.vue'
-import SettingsPage from '../views/Settings.vue'
+import UsersPage from '../views/users/UsersPage.vue'
+import SettingsPage from '../views/settings/Settings.vue'
 import LearnCSM from '../views/learn/Main.vue'
 import EditPage from '../views/cms/EditPage.vue'
-import FeedDetailsPage from '../views/FeedDetails.vue'
-import LogoutPage from '../views/Logout.vue'
+import FeedDetailsPage from '../views/feeds/FeedDetails.vue'
+import LogoutPage from '../views/public/Logout.vue'
 import globalStore from '../stores/global';
 
 
@@ -75,11 +74,6 @@ const router = createRouter({
       path: '/feeds/:feedid',
       name: 'feed-details',
       component: FeedDetailsPage
-    },
-    {
-      path: '/pages',
-      name: 'pages-list',
-      component: PageList
     },
     {
       path: '/themes',
