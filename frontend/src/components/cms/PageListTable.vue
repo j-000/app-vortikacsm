@@ -39,6 +39,7 @@
 <script>
 import { ref, watch } from 'vue';
 import global from '../../stores/global';
+import Api from '../../services/Api';
 
 export default {
   props:{
@@ -55,10 +56,8 @@ export default {
     const store = global();
 
     const getFiles = async () => {
-      const response = await fetch(`http://localhost:3001/api/cms/pages?status=${props.pagetype}`, {
-        headers: { authorization: `Bearer ${store.user.token}`}
-      });
-      const json = await response.json();
+      
+      const json = await Api.getPagesByStatus(props.pagetype);
       files.value = json.pages;
     }
     getFiles();

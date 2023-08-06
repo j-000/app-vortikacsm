@@ -1,7 +1,7 @@
 <template>
   <div>
     <RouterLink :to="{name: 'feeds'}">
-      <div class="alert alert-danger">
+      <div v-if="editorAlertMessage" class="alert alert-danger">
         <span class="navbar-text">{{ editorAlertMessage }}</span>
       </div>
     </RouterLink>
@@ -72,17 +72,16 @@
 </template>
 
 <script>
-import global from '../stores/global';
-import toast from '../functions';
+import toast from '../../functions';
 import { ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
+import Api from '../../services/Api';
 
 export default {
     props: {
         templateid: String
     },
     setup(props) {
-        const store = global();
         const fields = ref();
         const router = useRouter();
         const editorAlertMessage = ref();
@@ -91,10 +90,7 @@ export default {
             editor.setTheme('ace/theme/monokai');
             editor.session.setMode('ace/mode/html');
             editor.setOption("showPrintMargin", false);
-            const response = await fetch(`http://localhost:3001/api/cms/pages/${props.templateid}`, {
-                headers: { authorization: `Bearer ${store.user.token}` }
-            });
-            const json = await response.json();
+            const json = await Api.getPageById(props.templateid);
             if (json.error) {
                 disableEditor();
                 toast(json.error);
@@ -119,14 +115,7 @@ export default {
             editor.setReadOnly(true);
         };
         const saveFile = async () => {
-            const response = await fetch(`http://localhost:3001/api/cms/pages/${props.templateid}`, {
-                method: 'put',
-                headers: { authorization: `Bearer ${store.user.token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    newContent: editorValue()
-                })
-            });
-            const json = await response.json();
+            const json = await Api.updatePageById(props.templateid, { newContent: editorValue() });
             if (json.error) {
                 toast(json.error);
             }
@@ -135,8 +124,7 @@ export default {
             }
         };
         const getMappingFields = async () => {
-            const response = await fetch(`http://localhost:3001/api/mappings`, { headers: { authorization: `Bearer ${store.user.token}` } });
-            const json = await response.json();
+            const json = await Api.getMappings();
             if (json.error) {
                 toast(json.error);
             }

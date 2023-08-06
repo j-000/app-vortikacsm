@@ -7,7 +7,8 @@
           <div class="d-flex justify-content-between">
             <div>
               <h5 class="mb-1 card-title">{{feedData.name}}</h5>
-              <span v-if="!mappingsDone" class="badge bg-danger">Missing mappings</span>
+              <span v-if="!mappingsDone" class="badge bg-danger me-2">Missing mappings</span>
+              <span v-if="!feedData.cron" class="badge bg-danger me-2">Missing cron</span>
             </div>
             
             <small class="text-muted">
@@ -32,7 +33,8 @@
       <div class="row no-gutters align-items-center">
         <div class="col mr-2 d-flex justify-content-around">
           <span><i class="fas fa-briefcase"></i> {{feedData.totalFeedJobs}} Jobs</span> 
-          <small class="text-muted"><i class="fas fa-file-import"></i> Last import {{$moment(feedData.lastImport).fromNow()}}</small>
+          <small><i class="fas fa-file-import"></i> Last import {{$moment(feedData.lastImport).fromNow()}}</small>
+          <small v-if="nextImport"><i class="fas fa-clock"></i> Next import {{ $moment(nextImport).fromNow() }}</small>
         </div>
       </div>
     </div>
@@ -46,40 +48,36 @@
 
 <script>
 import { ref } from 'vue';
-import global from '../stores/global';
 import { RouterLink } from 'vue-router';
-
+import parser from 'cron-parser'
+import Api from '../services/Api';
 
 export default {
     props: {
         feedid: String
     },
     setup(props) {
+      console.log();
       const ready = ref(false);
-      const store = global();
       const feedData = ref({});
       const mappingsDone = ref(true);
-
+      const nextImport = ref();
+      
       const feed = async () => {
-          const response = await fetch(`http://localhost:3001/api/feeds/${props.feedid}`, { headers: { authorization: `Bearer ${store.user.token}` } });
-          const json = await response.json();
+          const json = await Api.getFeedById(props.feedid);
           feedData.value = json.feed;
           ready.value = true;
+          if(json.feed.cron) {
+            nextImport.value = parser.parseExpression(json.feed.cron).next().toDate()
+          }
       };
       feed();
 
-      const feedMappings = async () => {
-        const response = await fetch(`http://localhost:3001/api/mappings/feed/${props.feedid}`, { headers: { authorization: `Bearer ${store.user.token}` } });
-        const json = await response.json();
-        if (json.success) {
-          mappingsDone.value = json.requiredMappingComplete;
-        }
-      }
-      feedMappings();
       return {
           ready,
           feedData,
-          mappingsDone
+          mappingsDone,
+          nextImport
       };
     },
     components: { RouterLink }

@@ -81,9 +81,9 @@
 
 <script>
 import { ref } from "vue";
-import global from "../stores/global";
 import hljs from '../hljs';
 import toast from '../functions';
+import Api from '../services/Api';
 
 export default {
   props: {
@@ -92,15 +92,10 @@ export default {
   setup(props) {
     const mappingFields = ref({});
     const sourceFields = ref(props.feedObj.sourceFields);
-    const store = global();
     const newMappings = ref({});
     
     const getFeedMappings = async () => {
-      const response = await fetch(
-        `http://localhost:3001/api/mappings/feed/${props.feedObj._id}`,
-        { headers: { authorization: `Bearer ${store.user.token}` } }
-      );
-      const json = await response.json();
+      const json = await Api.getMappingsByFeedId(props.feedObj._id);
       if (json.success) {
         mappingFields.value = json.mappings.props;
         // Add placeholders for newMappings
@@ -114,15 +109,7 @@ export default {
     getFeedMappings();
 
     const saveNewMappings = async () => {
-      const response = await fetch(`http://localhost:3001/api/mappings/feed/${props.feedObj._id}`, {
-        method: 'post',
-        headers: {
-          authorization: `Bearer ${store.user.token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ props: newMappings.value })
-      });
-      const json = await response.json();
+      const json = await Api.updateMappingsByFeedId(props.feedObj._id, { props: newMappings.value });
       if (json.success) {
         toast('Success! Mappings updated.');
         getFeedMappings();

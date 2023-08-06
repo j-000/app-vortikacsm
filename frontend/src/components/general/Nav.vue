@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import globalStore from '../stores/global';
+import globalStore from '../../stores/global';
 
 export default {
   setup(){

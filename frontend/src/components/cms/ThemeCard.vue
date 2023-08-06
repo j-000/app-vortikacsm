@@ -109,6 +109,7 @@ import { ref } from 'vue';
 import global from '../../stores/global';
 import PageListTable from './PageListTable.vue';
 import toast from '../../functions';
+import Api from '../../services/Api';
 
 export default {
   props: {
@@ -139,19 +140,12 @@ export default {
     }
 
     const addNewPage = async () => {
-      const response = await fetch('http://localhost:3001/api/cms/pages', {
-        method: 'post', 
-        headers: {
-          authorization: `Bearer ${store.user.token}`,
-          'Content-Type': 'application/json'
-        }, 
-        body: JSON.stringify({
+      const json = await Api.addNewPage({
           name: newPage.value.name + '.html',
           fileType: newPage.value.pageType,
           urlslug: newPage.value.urlslug,
           themeId: newPage.value.themeId
-        })});
-      const json = await response.json();
+        });
       if (json.success) {
         callGetFiles.value = true;
         toast(json.message);

@@ -49,6 +49,7 @@
 import { ref } from 'vue';
 import global from '../stores/global';
 import toast from '../functions';
+import Api from '../services/Api';
 
 export default {
   props: {
@@ -64,9 +65,7 @@ export default {
     const orgid = store.user.orgid;
 
     const getJobs = async ({page}) => {
-      const response = await fetch(`http://localhost:3001/api/jobs/feed/${props.feedid}?page=${page}`, 
-      {headers: {authorization: `Bearer ${store.user.token}`}});
-      const json = await response.json();
+      const json = await Api.getJobsByFeedId(props.feedid, page);
       if (json.error){ 
         toast(json.error);
       } else {
@@ -76,14 +75,26 @@ export default {
       }
     }
     getJobs({page: 1});
-
+    const nextPage = () => {
+      if (currentPage.value > 0 && currentPage.value < totalPages.value) {
+        getJobs({page: currentPage.value + 1});
+      }
+    } 
+    const previousPage = () => {
+      if (currentPage.value > 1 && currentPage.value <= totalPages.value) {
+        getJobs({page: currentPage.value - 1});
+      }
+    }
+    
     return {
       jobs,
       preview_url,
       live_url,
       orgid,
       currentPage,
-      totalPages
+      totalPages,
+      nextPage,
+      previousPage
     }
   }
 };
