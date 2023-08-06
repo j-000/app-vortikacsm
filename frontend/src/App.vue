@@ -1,25 +1,43 @@
 <template>
   <div>
-  <Toast />
-  <div id="wrapper">
+    <Toast />
+    <div id="wrapper">
       <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
-          <Nav />
-          <!-- Begin Page Content -->
+          <Nav/>
           <div class="container mt-5">
             <RouterView />
           </div>
         </div>
+    </div>
+    <footer class="footer d-flex mt-auto py-3 bg-light align-items-center">
+      <div class="container">
+        <div class="row d-flex text-center text-muted">
+          <div class="col">
+          </div>
+          <div class="col align-conten-center">
+            <p class="mb-0">
+              &copy; Vortika<sup>CSM</sup> 2023
+            </p>
+          </div>
+          <div class="col">
+            <a class="text-muted" href="https://github.com/j-000/vortikacsm/issues/new/choose" target="_blank">
+              <i class="fa-brands fa-github me-2"></i>
+              <span>Raise an issue</span>
+            </a>
+          </div>
+        </div>
       </div>
-  </div>   
+    </footer>
+  </div>
 </div>
 
 </template>
 
 <script>
 import { RouterLink, RouterView } from 'vue-router';
-import Nav from './components/Nav.vue';
-import Toast from './components/Toast.vue';
+import Nav from './components/general/Nav.vue';
+import Toast from './components/general/Toast.vue';
 import global from './stores/global';
 
 export default {
