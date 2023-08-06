@@ -1,11 +1,13 @@
 
 const express = require('express');
 const cors = require('cors');
-const { Queue, Worker } = require('bullmq');
+const { Queue } = require('bullmq');
 const { createBullBoard } = require('@bull-board/api');
 const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
 const { ExpressAdapter } = require('@bull-board/express');
 const bodyParser = require('body-parser');
+const { worker } = require('./workers/apiWorker');
+
 
 // Create Express app
 const app = express();
@@ -30,23 +32,38 @@ createBullBoard({
 // this is where the dashboard will be shown.
 app.use('/admin', serverAdapter.getRouter());
 
-// Setup worker
-const worker = new Worker('Imports', async job => {
-    for(let i = 0; i < 100; i++){
-        job.updateProgress(i);
-        await new Promise(r => setTimeout(r, 1000));
-    }
-    console.log(job.data);
+app.get('/', async (req, res) => {
+    const job = await jobsQ.add('Test', { orgid: '1', feedid: '2' }, {
+        repeat: {
+            cron: '44 * * * *',
+        },
+        removeOnComplete:{
+            count: 100
+        }
+    })
+    const job2 = await jobsQ.add('Test2', { orgid: '1', feedid: '2' }, {
+        repeat: {
+            cron: '44 * * * *',
+        },
+        removeOnComplete:{
+            count: 100
+        }
+    })
+    res.send({success: true, job1id: job.id, job2id: job2.id })
 })
-// Event Listeners
-worker.on('completed', job => {
-    console.log(`${job.id} has completed!`);
-});   
-worker.on('failed', (job, err) => {
-    console.log(`${job.id} has failed with ${err.message}`);
-});
 
 // Start Server
 app.listen(3002, () => {
     console.log(`BullMQ Dashboard running on port 3002`);
 })
+
+
+// process.on("uncaughtException", function (err) {
+//     // Handle the error safely
+//     logger.error(err, "Uncaught exception");
+//   });
+  
+// process.on("unhandledRejection", (reason, promise) => {
+// // Handle the error safely
+//     logger.error({ promise, reason }, "Unhandled Rejection at: Promise");
+// });
