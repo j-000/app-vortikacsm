@@ -45,7 +45,7 @@ app.use(express.static(path.resolve(__dirname, 'templates/assets')));
 
 // Allow CORS 
 // [Must stay on top of app.js and before middleware below]
-app.use(cors({ origin: process.env.CORS_ALLOWED_ORIGINS }));
+app.use(cors({ origins: process.env.CORS_ALLOWED_ORIGINS.split(',') }));
 
 // Cookie Parser
 app.use(cookieParser());
