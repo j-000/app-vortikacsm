@@ -37,9 +37,10 @@ class JobsController {
 
   static async addJobs(req, res) {
     try {
-      const { orgid, feedid, props} = req.body.jobObj;
-      const job = { orgid, props, feedid: new ObjectId(feedid)}      
-      const feedJob = await JobsService.createMany([job]);
+      const { orgid, props} = req.body;
+      const feedid =new ObjectId(req.body.feedid);
+      const feedJob = await JobsService.create(feedid, orgid, props);
+      res.json({success: true, feedJob})
     } catch(error) {
       console.log(error);
       res.status(500).json({error: error.message});
