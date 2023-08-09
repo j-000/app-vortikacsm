@@ -1,33 +1,31 @@
 const { Worker } = require('bullmq');
 const { importJobs } = require('./general');
 
-// Setup workers
-// Default is to have 2 worker (Vor, Tika)
-const queueName = 'Imports';
+// Load env vars
+require('dotenv').config()
+
+// Get queue name
+const queueName = process.env.QUEUE_NAME;
+
+// Setup config
 const config = { 
   connection: {
-    host: 'localhost',
-    port: 6379
-  }
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT
+  },
 }
 
-const vor = new Worker(queueName, async (job) => {
-  importJobs(job)
-}, config);
+// Create workers
+const vor = new Worker(queueName, async (job) => { importJobs(job) }, config);
+const tika = new Worker(queueName, async (job) => { importJobs(job) }, config);
 
-vor.on('error', err => {
-  // log the error
-  console.error(err);
-});
+// Listen to error
+const workers = [vor, tika];
+workers.forEach(w => {
+  w.on('error', err => { console.log(`${w.name} - Error: ${err}`) })
+})
 
-// Event Listeners
-vor.on('completed', job => {
-});   
-vor.on('failed', (job, err) => {
-});
-
-const worker = vor
 
 module.exports = {
-  worker
+  workers
 }
