@@ -55,7 +55,7 @@ class PagesController {
           res.json({error: 'Error getting template.'})
         } else {
           const lockFile = await PageService.updateOne({ _id }, {fileLocked: true, fileLockedBy: req.user.name})
-          res.json({ fileContent });
+          res.json({ fileContent, status: file.status });
         }
       })
 
@@ -112,7 +112,9 @@ class PagesController {
       const createdUser = req.user.name;
       const newPage = await PageService.create({orgid, filepath, name, status, createdUser, fileType, urlslug});
     } catch (error){
+      console.log(error);
       res.json({error: 'Error creating page.'})
+      return
     }
 
     try {
