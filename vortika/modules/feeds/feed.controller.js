@@ -51,10 +51,10 @@ class FeedsController {
   static async update(req, res){
     const orgid = req.user.org;
     const feedid = new ObjectId(req.params.feedid);
-    const {newCron, sourceFields, lastImport} = req.body;
+    const {cron, sourceFields, lastImport} = req.body;
     const obj = {};
-    if (newCron){
-      obj.cron = newCron
+    if (cron){
+      obj.cron = cron
     }
     if (sourceFields){
       obj.sourceFields = sourceFields
@@ -68,7 +68,7 @@ class FeedsController {
     }
     try {
       await FeedService.update({ _id: feedid}, obj);
-      res.json({success: 'Feed udpated.'});
+      res.json({success: true, message: 'Feed udpated.'});
     } catch(error){ 
       res.json({error: 'Error updating the feed.'})
     }
@@ -86,10 +86,23 @@ class FeedsController {
   }
 
   static async runImport(req, res) {
-    jobsQ.add(`Feed-${req.params.feedid}`, { feedid: req.params.feedid, orgid: req.user.orgid});
-    res.send({success: true, message: 'Import started.'})
-  }
+    const { feedid } = req.params;
+    const orgid = req.user.orgid;
+    const _id = new ObjectId(feedid);
+    const feed = await FeedService.getOne({ _id });
 
+    if (feed) {
+      if (feed.cron !== null) {
+        jobsQ.add(`Feed: ${feed.name}`, { feedid, orgid }, { repeat: {pattern: feed.cron }});
+        res.send({success: true, message: `Scheduled import started for feed ${feed.name}.`})
+      } else {
+        jobsQ.add(`Feed: ${feed.name}`, { feedid, orgid });
+        res.send({success: true, message: `Manual import started for feed ${feed.name}. No cron set.`})
+      }
+    } else {
+      res.send({error: 'No such feed.'})
+    }
+  }
 }
 
 
